@@ -1,0 +1,49 @@
+function AProfile(symbol){
+
+  //** keys: Symbol, Name, Industry, Description, Employees, MaxSalary, Country, QualityScore
+  
+  if (symbol == f.cUndefined())
+  {
+    f.Debug(true)
+    symbol = "EH"
+  }
+  
+  var HTML = GetYahooHTML(symbol, "profile")
+//  log("HTML", HTML)
+  
+  dict.W("Symbol", symbol)
+
+  var item = ParseYahooName(HTML)
+  dict.W("Name", item)
+  
+  var item = ParseYahooSector(HTML)
+  item = f.Replace(item, "amp;", "")
+  dict.W("Industry", item)
+  
+  item = ParseYahooDescription(HTML)
+  item = f.Replace(item, "amp;", "")
+  dict.W("Description", item)
+
+  item = ParseYahooEmployees(HTML)
+  dict.W("Employees", item)
+
+  var MaxSalary = GetMaxSalary(HTML)
+  dict.W("MaxSalary", MaxSalary)
+//  return
+
+  var Country = GetCountry(HTML)
+  dict.W("Country", Country)
+  
+  var QualityScore = GetQualityScore(HTML)
+  dict.W("QualityScore", QualityScore)
+  
+  if (f.Debug())
+  {
+    f.log(["dict.R(keys)", dict.R("Country"), dict.R("Name"), dict.R("keys")])
+  }
+  
+  return dict
+  
+}
+
+

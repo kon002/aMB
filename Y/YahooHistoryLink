@@ -1,0 +1,36 @@
+function GetYahooHistoryLink(symbol, dateFrom, dateTo, intervalDWk){
+  //** https://finance.yahoo.com/quote/AWK/history?period1=1531465200&period2=1542157364&interval=1d&filter=history&frequency=1d
+  
+  if (dateFrom == f.cUndefined())
+  {
+    dateTo = d.SetDate(d.Today())
+    dateFrom = d.AddDays(d.SetDate(d.Today()), -7)
+    symbol = "SPY"
+  }
+  else
+  {
+    dateTo = d.SetDate(dateTo)
+    dateFrom = d.SetDate(dateFrom)
+  }
+//  f.log(["dateFrom", dateFrom, dateTo])
+  
+  dateFrom = Math.round(dateFrom.getTime()/1000)
+  dateTo = Math.round(dateTo.getTime()/1000)
+  
+  var sLink = "http://finance.yahoo.com/quote/"+symbol  
+  sLink = sLink + "/history?period1="+dateFrom
+  sLink = sLink + "&period2=" + dateTo
+  if (interval = f.cUndefined())
+  {
+    sLink = sLink + "&interval=1d"  //** used to have:  &filter=history&frequency=1
+  }
+  else
+  {
+    sLink = sLink + "&interval=1" + intervalDWk  //** used to have:  &filter=history&frequency=1
+  }
+//  f.log([sLink])
+  
+  return sLink
+
+}
+

@@ -1,0 +1,11 @@
+function GetYahooItem(sHTML, term)
+{
+  
+  var res = f.RegExStartEnd(sHTML, term, ",")
+//  f.log([res])
+  
+  return res
+  
+}
+
+

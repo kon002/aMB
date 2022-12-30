@@ -1,0 +1,27 @@
+//** Constants
+//** Yahoo-ProfileData
+var cYahooSector = 0
+var cYahooDescription = 1
+var cYahooEmployees = 2
+
+//** Yahoo-QuoteData
+var cYahooName = 0
+var cYahooDividend = 1
+var cYahooCap = 2
+var cYahooLow = 3
+var cYahooHi = 4
+var cYahooPrice = 5
+var cYahooPerc = 6
+
+//** Yahoo-Key-Statistics
+var cYahooTPE = 0
+var cYahooFPE = 1
+var cYahooDebt = 2
+var cYahooRetOnAssets = 3
+var cYahooOpMargin = 4
+var cYahooDebtE = 5
+var cYahooPriceBook = 6
+var cYahooEVal = 7
+var cYahooNetIncome = 8
+//** Constants
+

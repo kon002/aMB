@@ -1,0 +1,108 @@
+function YahooGetKeyStatistics(symbol){
+
+  if (symbol == f.cUndefined())
+  {
+    var debug = true
+    symbol = "TD.TO"
+  }
+  
+  var HTML = GetYahooHTML(symbol, "key-statistics")
+  
+  //** 7
+  var item = ParseYahooItem(HTML, "trailingMarketCap", debug)
+  var MarketCap = item
+  dict.W("MarketCap", item)
+  if (debug)
+  {
+    f.log(["MarketCap", item])
+  }
+  
+  //** 1
+  var item = ParseYahooProfitMargin(HTML, debug)
+  dict.W("ProfitMargin", item)
+  if (debug)
+  {
+    f.log(["ProfitMargin", item])
+  }
+  
+  //** 2
+  var item = ParseYahooTrailingPE(HTML, debug)
+  dict.W("TrailingPE", item)
+  if (debug)
+  {
+    f.log(["TrailingPE", item])
+  }
+  
+  //** 3
+  var item = ParseYahooForwardPE(HTML, debug)
+  dict.W("ForwardPE", item)
+  if (debug)
+  {
+    f.log(["ForwardPE", item])
+  }
+  
+  //** 4
+  var item = ParseYahooItem(HTML, "netIncomeToCommon", debug)
+  var NetIncome = item
+  dict.W("NetIncome", item)
+  if (debug)
+  {
+    f.log(["NetIncome", item])
+  }
+  var perc = f.Dec(NetIncome / MarketCap * 100, 0)
+  dict.W("NetIncomePercFromMCap", perc)
+  if (debug)
+  {
+    f.log(["NetIncomePercFromMCap", perc, NetIncome, MarketCap])
+  }
+  
+  //** 5
+  var item = ParseYahooItem(HTML, "totalDebt", debug)
+  var TotalDebt = item
+  var TotalDebtPercFromMCap = f.Dec(TotalDebt / MarketCap * 100, 0)
+  dict.W("TotalDebtPercFromMCap", TotalDebtPercFromMCap)
+  if (debug)
+  {
+    f.log(["TotalDebtPercFromMCap", TotalDebtPercFromMCap])
+  }
+  
+  //** 6
+  var item = ParseYahooItemBilion(HTML, "totalCash", debug)
+  dict.W("TotalCash", item)
+  if (debug)
+  {
+    f.log(["TotalCash", item])
+  }
+  
+
+  //** 8
+  var item = ParseYahooReturnOAssets(HTML, debug)
+  dict.W("ReturnOAssets", item)
+  if (debug)
+  {
+    f.log(["ReturnOnAssets", item])
+  }
+  
+  //** 9
+  var item = ParseYahooTrailingPbRatio(HTML)
+  dict.W("PriceBook", item)
+  if (debug)
+  {
+    f.log(["PriceBook", item])
+  }
+
+  
+//  var item = GetYahooItem(HTML, "Total Debt/Equity")
+//  a.Add(arr, item)
+//  
+//  var item = GetYahooItem(HTML, "Enterprise Value")
+//  a.Add(arr, item)
+//
+//  //8 - cYahooNetIncome
+//  var item = GetYahooItem(HTML, "Net Income Avi to Common")
+//  a.Add(arr, item)
+
+//  return arr
+  return dict.R("keys")
+  
+}

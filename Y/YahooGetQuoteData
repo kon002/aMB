@@ -1,0 +1,283 @@
+function AYahooGetSummary(symbol, debug){
+
+  var arr = YahooGetQuoteData(symbol, true, debug)
+  return arr
+
+}
+
+
+function YahooGetQuoteData(symbol, returnKeys, debug){
+
+  var HTML = GetYahooHTML(symbol)
+  var arr = []
+  
+//  return
+  
+  // f.log(["ParseYahooPrice>"])
+  item = ParseYahooPrice(HTML, symbol, debug)
+  a.Add(arr, item)
+  dict.W("Price", item)
+  // f.log(["price", item, symbol])
+  
+//  log("ParseYahooName")
+  var item = ParseYahooName(HTML)
+  a.Add(arr, item)
+  dict.W("Name", item)
+//  f.log(["Name", item])
+  
+  // f.log("ParseYahooDividend")
+  item = ParseYahooDividend(HTML)
+  a.Add(arr, item)
+  dict.W("Div", item)
+//  f.log(["Div", item])
+  
+  item = ParseYahooCap(HTML)
+  a.Add(arr, item)
+  dict.W("Cap", item)
+//  f.log(["Cap", item])
+
+//  log("ParseYahooHiLow")
+  item = ParseYahooHiLow(HTML)
+  a.Add(arr, item[0])
+  a.Add(arr, item[1])
+  dict.W("Low52", item[0])
+  dict.W("Hi52", item[1])
+//  f.log(["Hi52", item[1]])
+  
+//  log("ParseYahooPerc")
+  item = ParseYahooPerc(HTML, symbol)
+  a.Add(arr, item)
+  dict.W("Perc", item)
+//  f.log(["Perc", item])
+  
+  if (returnKeys)
+  {
+    return dict.R("keys")
+  }
+  else
+  {
+    return arr
+  }
+  
+}
+
+
+function ConvertToBilions(str){
+
+  var cap = f.RegExStartEnd(str, "(\\d{1,4}\.)?\\d{1,3}", "")
+  if (f.InStr(str, "T"))
+  {
+    cap[0] = cap[0] * 1000 
+  }
+  else if (f.InStr(str, "B"))
+  {
+    cap[0] = cap[0] 
+  }
+  else if (f.InStr(str, "M"))
+  {
+    cap[0] = cap[0] / 1000
+  }
+  
+  return cap[0]
+
+}
+
+
+function ParseYahooCap(sHTML)
+{
+  //** "Cap" 
+  var res =f.RegExStartEnd(sHTML, "MARKET_CAP-value", "<tr")  //</") 
+  if (res[0] == "")
+  {
+    res = f.RegExStartEnd(sHTML, "Net Assets", "<tr")  
+  }
+//  log("res1", res[0])
+  var res = f.RegExStartEnd(res[0], ">\\d", "</")
+//  log("res2", res[0])
+  var cap = f.RegExStartEnd(res[0], "(\\d{1,4}\.)?\\d{1,3}", "")
+  if (f.InStr(res[0], "T"))
+  {
+    cap[0] = cap[0] * 1000
+  }
+  else if (f.InStr(res[0], "M"))
+  {
+    cap[0] = cap[0] / 1000
+  }
+//  log("cap", cap[0])
+  
+  return cap
+  
+}
+
+
+function YahooGetProfileData(symbol){
+
+  var HTML = GetYahooHTML(symbol, "profile")
+//  log("HTML", HTML)
+  var arr = []
+  
+  var item = ParseYahooSector(HTML)
+  item = f.Replace(item, "amp;", "")
+  a.Add(arr, item)
+  
+  item = ParseYahooDescription(HTML)
+  item = f.Replace(item, "amp;", "")
+  a.Add(arr, item)
+
+  item = ParseYahooEmployees(HTML)
+  a.Add(arr, item)
+
+  return arr
+  
+}
+
+
+function GetYahooHTML(symbol, tab) {
+  
+  var link = "https://finance.yahoo.com/quote/" + symbol
+  
+  if (tab != f.cUndefined())
+  {
+    link = link + "/" + tab 
+  }
+
+//  f.log(["GetURLText>", link])
+  var text = f.GetURLText(link)
+//  f.log(["GetURLText<"])
+  
+  return text
+}
+
+
+function ParseYahooDividend(sHTML)
+{
+  
+  var res =f.RegExStartEnd(sHTML, "\"dividendYield", "}")
+  //log("res1", res[0])
+  var res =f.RegExStartEnd(res[0], "\\d{1}\.\\d{1,4}", "")
+  //log("res2", res[0])
+  if (res[0] == "")
+  {
+    var res =f.RegExStartEnd(sHTML, "\"yield", "}")
+    //log("res3", res[0])
+    var res =f.RegExStartEnd(res[0], "\\d{1}\.\\d{1,4}", "")
+    //log("res4", res[0])
+  }
+  res = f.Dec(res[0]*100, 2)
+  
+  return res
+  
+}
+
+
+function ParseYahooName(sHTML)
+{
+  
+  // f.log(["html", sHTML])
+  var res = f.RegExStartEnd(sHTML, "smartphone_Mend", "h1>")  //smartphone_Mend")
+  // f.log(["res1", res[0]])
+  var res = f.RegExStartEnd(res[0], "h1", "h1")
+  // f.log(["res2", res[0]])
+  var res = f.RegExStartEnd(res[0], ">", "<")
+  // f.log(["res3", res[0]])
+  res = f.Mid(res[0], ">", "<")
+  // f.log(["res4", res])
+  if (f.InStr(res, " - "))
+  {
+    res = res.substr(f.InStr(res, " - ")+2, res.length)
+  }
+  // f.log(["res5", f.InStr(res, ",")])
+  res = f.Left(res, ",")
+  res = f.Left(res, ".")
+  res = f.Left(res, "(")
+  // f.log(["res6", res])
+  
+  res = f.Replace(res, "&#x27;", "'")
+  res = f.Replace(res, "amp;", "")
+  // f.log(["res", res])
+  
+  return res
+  
+}
+
+
+function ParseYahooSector(sHTML)
+{
+  
+  var res = f.RegExStartEnd(sHTML, ">Category", "</span></div>")
+  //log("res1", res[0])
+  if (res[0] == "")
+  {
+    var res = f.RegExStartEnd(sHTML, "\"industry\":\"", "\"")
+    //log("res1A", res[0])
+    res = f.Mid(res[0], "\"industry\":\"", "\"")
+    //log("res2A", res)
+  }
+  else
+  {
+    var res = f.RegExStartEnd(res[0], "\">", "<")
+    //log("res2", res[0])
+    res = f.Mid(res[0], "\">", "<")
+  }
+  
+  return res
+  
+}
+
+
+function ParseYahooEmployees(sHTML)
+{
+  
+  var res = f.RegExStartEnd(sHTML, "Full Time Employees", "</span></span>")
+//  log("FTE1", res[0])
+  var res = f.RegExStartEnd(res[0], ">" + f.cRegExINT, "</")
+//  log("FTE2", res[0])
+  var res = f.RegExStartEnd(res[0], f.cRegExINT, "")
+//  log("FTE3", res[0])
+  
+  return res[0]
+  
+}
+
+
+function ParseYahooDescription(sHTML)
+{
+  
+  var res = f.RegExStartEnd(sHTML, "longBusinessSummary", "\",")
+//  log("res1", res[0])
+  res = f.Mid(res[0], "longBusinessSummary\":\"", "\",")
+  
+  return res
+  
+}
+
+
+function ParseYahooHiLow(sHTML)
+{
+  
+  var res = f.RegExStartEnd(sHTML, "FIFTY_TWO_WK_RANGE", "<")
+//  f.log("res1", res[0])
+  var res = f.RegExStartEnd(res[0], ">", "<")
+//  f.log("res2", res[0])
+  var res = f.RegExStartEnd(res[0], "(\\d{1},)?\\d{1,3}\.\\d{2}", "")
+//  f.log("res3", res)
+  
+  return res
+  
+}
+
+
+function ParseYahooPerc(sHTML, symbol)
+{
+  
+  var res = f.RegExStartEnd(sHTML, symbol + "\" data-field=\"regularMarketChangePercent\"", "%")  // Trsdu\\(0.3s\\) Fw\\(500\\)", "<")
+//  f.log(["resP", res[0]])
+  var res = f.RegExStartEnd(res[0], "-?\\d{1,3}\.\\d{2,4}%", "")
+//  f.log(["resP2", res[0]])
+  var res = f.RegExStartEnd(res[0], "-?\\d{1,3}\.\\d{2,4}", "")
+//  f.log(["resP3", res[0]])
+  
+  return res[0]
+  
+}
+

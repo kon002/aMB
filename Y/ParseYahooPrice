@@ -1,0 +1,27 @@
+function ParseYahooPrice(sHTML, symbol, debug)
+{
+  
+  if (f.InStr(sHTML, "currentPrice"))
+  {
+    var res = f.RegExStartEnd(sHTML, "currentPrice", "},")  
+  }
+  else  //** ETF
+  {
+    var res = f.RegExStartEnd(sHTML, "Fw\\(b\\) Fz\\(36px\\)", "<")
+  }
+
+  if (debug)
+  {
+    f.log(["resYP", symbol, res.length, res[0]]) // , f.CR, res[1]])
+  }
+  var res = f.RegExStartEnd(res[0], f.cRegExPrice, "")
+  if (debug)
+  {
+    f.log(["resYP", res[0]])
+  }
+  
+  return f.nuv(res[0])
+  
+}
+
+

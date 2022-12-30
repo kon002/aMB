@@ -1,0 +1,37 @@
+function AQuote(symbol){
+  //** keys: Name, Div, Cap, Low52, Hi52, Price, Perc
+  
+  if (symbol == f.cUndefined())
+  {
+    f.Debug(true)
+    symbol = "AAPL"
+  }
+  
+  var HTML = GetYahooHTML(symbol)
+  
+  var item = ParseYahooName(HTML)
+  dict.W("Name", item)
+  
+  item = ParseYahooDividend(HTML)
+  dict.W("Div", item)
+  
+  item = ParseYahooCap(HTML)
+  dict.W("Cap", item)
+
+  item = ParseYahooHiLow(HTML)
+  dict.W("Low52", item[0])
+  dict.W("Hi52", item[1])
+  
+  item = ParseYahooPrice(HTML)
+  dict.W("Price", item)
+  
+  if (f.Debug())
+  {
+    f.log(["dict.R(keys)", dict.R("Name"), dict.R("keys"), dict.R("Price")])
+  }  
+ 
+  return dict
+  
+}
+
+

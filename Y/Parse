@@ -1,0 +1,131 @@
+function ParseYahooItem(sHTML, label, debug)
+{
+  
+  var res =f.RegExStartEnd(sHTML, "\"" + label, "}")
+  if (debug)
+  {
+//    f.log([label + "0", res[0]])
+  }
+  var res =f.RegExStartEnd(res[0], "raw\":(-)?\\d+", "")
+  if (debug)
+  {
+//    f.log([label + "1", res[0]])
+  }
+  var res = f.RegExStartEnd(res[0], "(-)?\\d+", "")
+  if (debug)
+  {
+//    f.log([label + "2", res[0]])
+  }
+  res = f.Dec(res[0], 2)
+  
+  return res
+  
+}
+
+
+function ParseYahooItemBilion(sHTML, label, debug)
+{
+    
+  var rtn = ParseYahooItem(sHTML, label, debug)  
+    
+  res = f.Dec(rtn/1000000000, 2)
+  
+  return res
+  
+}
+
+
+function ParseYahooProfitMargin(sHTML, debug)
+{
+  
+  var res =f.RegExStartEnd(sHTML, "\"profitMargins", "}")
+  if (debug)
+  {
+//    f.log(["profitMargins", res[0]])
+  }
+  var res =f.RegExStartEnd(res[0], "-?\\d{1}\.\\d{1,4}", "")
+  res = f.Dec(res[0]*100, 2)
+  if (debug)
+  {
+//    f.log(["profitMargins", res])
+  }
+  
+  return res
+  
+}
+
+
+function ParseYahooTrailingPE(sHTML, debug)
+{
+  
+  var res =f.RegExStartEnd(sHTML, "\"trailingPeRatio", "}")
+  if (debug)
+  {
+//    f.log(["TrailingPE", res[0]])
+  }
+  var res = f.RegExStartEnd(res[0], "raw\":\\d{1,4}\.\\d{2,2}", "")
+  var res = f.RegExStartEnd(res[0], "\\d{1,4}\.\\d{2,2}", "")
+  res = f.Int(res)
+  if (debug)
+  {
+//    f.log(["TrailingPE", res])
+  }
+  
+  return res
+  
+}
+
+
+function ParseYahooForwardPE(sHTML, debug)
+{
+  
+  var res =f.RegExStartEnd(sHTML, "\"forwardPE", "}")
+//  f.log(["res1", res[0]])
+  var res =f.RegExStartEnd(res[0], "raw\":\\d{1,2}\.\\d{2,2}", "")
+  var res =f.RegExStartEnd(res[0], "\\d{1,2}\.\\d{2,2}", "")
+  res = f.Int(res)
+  if (debug)
+  {
+//    f.log(["ForwardPE", res])
+  }
+  
+  return res
+  
+}
+
+
+function ParseYahooReturnOAssets(sHTML, debug)
+{
+  
+  var res =f.RegExStartEnd(sHTML, "\"returnOnAssets", "}")
+//  f.log(["res1", res[0]])
+  var res =f.RegExStartEnd(res[0], "raw\":-?\\d{1,2}\.\\d+", "")
+//  f.log(["res1", res[0]])
+  var res =f.RegExStartEnd(res[0], "-?\\d{1,2}\.\\d+", "")
+//  f.log(["res1", res[0]])
+  res = f.Dec(res[0]*100, 2)
+//  f.log(["res1", res])
+  
+  return res
+  
+}
+
+
+function ParseYahooTrailingPbRatio(sHTML, debug)
+{
+  
+  var res =f.RegExStartEnd(sHTML, "\"trailingPbRatio", "}")
+//  f.log(["res1", res[0]])
+  var res =f.RegExStartEnd(res[0], "raw\":\\d{1,2}\.\\d+", "")
+//  f.log(["res1", res[0]])
+  var res =f.RegExStartEnd(res[0], "\\d{1,2}\.\\d+", "")
+//  f.log(["res1", res[0]])
+  res = f.Dec(res[0], 2)
+//  f.log(["res1", res])
+  
+  return res
+  
+}
+
+
+
