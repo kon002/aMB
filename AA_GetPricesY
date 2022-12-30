@@ -1,0 +1,9 @@
+function AA_GetPrices1Y() {
+   
+  //** get prices - slow method - html parse for each stock
+  
+  p.API2_Yahoo(1)
+  
+  // p.API2_Yahoo(2)
+  
+}

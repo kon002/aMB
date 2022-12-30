@@ -1,0 +1,49 @@
+function AA_MB_Prices() {
+  
+  t.Run("AA_MB_Prices")
+//  t.AStop("AA_MB_Prices")
+  
+  var arrSymbolsMB = g.AddSheetWN(ssMB)
+  
+//  t.AStop("ssPA >")
+  g.AddSheet(ssPA)
+  t.AStop("ssPA")
+//  return
+  
+  for (var i = 3; i < arrSymbolsMB.length; i++)
+  {
+    var symbol = arrSymbolsMB[i]
+//    if (symbol == "DASTY")
+    if (symbol != "")
+    {
+      var price = g.R(ssPA, symbol, "Price")
+      f.log(["symbol, price", symbol, price])
+//      return
+      if (price > 0)
+      {
+        var perc = g.R(ssPA, symbol, "Perc")
+        var Hi52 = g.R(ssPA, symbol, "Hi52")
+        var Cap = g.R(ssPA, symbol, "Cap")
+        var TS = g.R(ssPA, symbol, "TS")
+        g.W(ssMB, symbol, "Price", price)
+        g.WN(ssMB, symbol, "Price", TS)
+        g.W(ssMB, symbol, "1d", perc)
+        g.WN(ssMB, symbol, "1d", TS)
+        g.W(ssMB, symbol, "Hi52", Hi52)
+        g.WN(ssMB, symbol, "Hi52", TS)
+        if (Cap != "")
+        {
+          g.W(ssMB, symbol, "Cap", Cap)
+        }
+//        return
+      }
+    }
+  }
+
+  g.W(ssMB, "AAA", "Price", d.GetTime())
+
+  g.ASave(ssMB)
+
+  t.ShowTimeInterval("AA_MB_Prices")
+  
+}
