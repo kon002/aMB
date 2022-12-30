@@ -1,0 +1,41 @@
+function AA_P_Prices() {
+  
+  da.Log2("AA_P_Prices>")
+  
+  var arrSymbols = g.AddSheetWN(ssPrice)
+  arrSymbols = GetActiveSymbols(arrSymbols)
+//  f.log([arrSymbols])
+  
+  g.AddSheet(ssPA)
+  
+  for (var i = 0; i < arrSymbols.length; i++)
+  {
+    var symbol = arrSymbols[i]
+    if (symbol != "")
+//    if (symbol == "DNNGY")
+    {
+      var price = g.R(ssPA, symbol, "Price")
+//      f.log(["symbol, price", symbol, price])
+      if (price > 0)
+      {
+        var perc = g.R(ssPA, symbol, "Perc")
+        var TS = g.R(ssPA, symbol, "TS")
+        var Cap = g.R(ssPA, symbol, "Cap")
+        
+        g.W(ssPrice, symbol, "Price", price)
+        g.W(ssPrice, symbol, "Cap", Cap)
+        g.WN(ssPrice, symbol, "Price", TS)
+        
+        g.W(ssPrice, symbol, "1d", perc)
+        g.WN(ssPrice, symbol, "1d", TS)
+        f.log(["symbol", symbol, price, perc, TS])
+      }
+    }
+  }
+//  return
+
+  g.ASave(ssPrice)
+  
+  da.Log2("AA_P_Prices:End")
+  
+}
