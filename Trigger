@@ -1,0 +1,40 @@
+function Trigger10PM(){
+  
+  Update10PM()
+
+}
+
+
+function Trigger11PM(){
+  
+  Update11PM()
+
+}
+
+
+function TriggerWeekend(){
+  //** Saterday 1AM
+  
+  UpdateWeekend()
+
+}
+
+
+function TriggerWeekend2(){
+  //** Saterday 2-3AM
+  
+  UpdateWeekend2()
+
+}
+
+
+function TriggerWeekend3(){
+  //** Saterday 3-4AM
+  
+  //** temp - error
+//  UpdateWeekend3()
+
+}
+
+
+

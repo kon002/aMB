@@ -1,0 +1,50 @@
+function Own2(ss, arrWU, arrWUAmt, arrWN, arrWNAmt) {
+  
+  var arrSymbol = g.AddSheet(ss)
+  
+  f.log(["2", arrWU])
+//  return
+  
+  for (var i = 2; i < arrSymbol.length; i++)  //arrSymbol.length
+  {
+    var symbol = arrSymbol[i]
+//    if (symbol == "EARK.NE")
+    if (symbol > ".")
+    {
+      g.W(ss, symbol, "Own", "")
+      var symbolKey = symbol
+      if (f.InStr(symbolKey, "-U.TO"))
+      {
+        //match Yahoo to Google convention
+        symbolKey = f.Replace(symbolKey, "-U.TO", ".U")
+//        f.log([symbolKey, "***"])
+      }
+      var amt = a.RSum(arrWU, arrWUAmt, symbolKey)
+      if (amt > 0)
+      {
+        g.W(ss, symbol, "Own", amt/1000)
+        g.WN(ss, symbol, "Own", d.TimeStamp())
+      }
+      else
+      {
+        //** CAD assets
+        if (f.InStr(symbol, ".TO") || f.InStr(symbol, ".NE"))
+        {
+          var symbolKey = f.Replace(symbol, ".TO", "")
+          symbolKey = f.Replace(symbolKey, ".NE", "")
+          symbolKey = f.Replace(symbolKey, "-", ".")
+          var amt = a.RSum(arrWN, arrWNAmt, symbolKey)
+          if (amt > 0)
+          {
+            g.W(ss, symbol, "Own", amt/1000)
+            g.WN(ss, symbol, "Own", d.TimeStamp())
+//            f.log(["symbol, amt", symbol, amt])
+          }
+        }
+      }     
+    }
+  }
+  
+  g.ASave(ss)
+
+}

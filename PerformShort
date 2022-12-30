@@ -1,0 +1,37 @@
+function PerformanceShort() {
+  t.Run("Performance")
+//  t.AStop("Run")
+  
+  var arrSymbol = g.AddSheetWN(ssPrice)  // f.GetSymbols(ssPrice) 
+  arrSymbol = GetActiveSymbols(arrSymbol)
+  
+//  if (f.InStr(arrSymbol, "XPEV") > 0)
+//  {
+//    f.log(["found", f.InStr(arrSymbol, "XPEV")])
+//  }
+//  return
+  
+  var row = 0
+  for (var i = 1; i < arrSymbol.length; i++)   // arrSymbol.length
+  {
+    var symbol = (arrSymbol[i])
+    if (symbol != "")  
+//    if (symbol == "AC.TO")  
+    {
+      f.log(["PerformanceShort", symbol])
+      GetPerformanceShort(symbol)
+//      if (i > 5)
+//      {
+//        break
+//      }
+    }
+  }
+  
+//  t.AStop("Save>")
+  g.ASave(ssPrice)
+  
+  t.ShowTimeInterval("Performance")
+
+}
+
+

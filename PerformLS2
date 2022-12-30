@@ -1,0 +1,42 @@
+function GetPerformanceShort(symbol) {
+  
+  if (symbol == f.cUndefined())
+  {
+    var debug = true
+    symbol = "ALGN"
+  }
+  
+  var arr = p.PerformanceShort(symbol)
+  if (arr != f.cUndefined())
+  {
+    var TS = "as of - " + f.Left2(arr[3], 18)
+    f.log([symbol, TS])
+    g.W(ssPrice, symbol, "1wk", arr[0])
+    g.W(ssPrice, symbol, "1m", arr[1])
+    g.W(ssPrice, symbol, "3m", arr[2])
+    if (debug)
+    {
+      f.log([symbol, f.nul(arr[0]), f.nul(arr[1]), f.nul(arr[2])])
+    }
+    g.WN(ssPrice, symbol, "1wk", "")
+    g.WN(ssPrice, symbol, "1m", "")
+    g.WN(ssPrice, symbol, "3m", "")
+    if (f.nul(arr[0]) != "")
+    {    
+      g.WN(ssPrice, symbol, "1wk", TS)
+    }
+    if (f.nul(arr[1]) != "")
+    {    
+      g.WN(ssPrice, symbol, "1m", TS)
+    }
+    if (f.nul(arr[2]) != "")
+    {    
+      g.WN(ssPrice, symbol, "3m", TS)
+    }
+  }
+
+  //** Debug
+//  g.ASave(ssPrice)
+
+}
+

@@ -1,0 +1,18 @@
+function Update11PM() {
+
+  //** update W2 1m avg and array
+  
+  if (d.Weekend() == false)
+  {
+    da.Log2(["Update11PM"])
+    //** updates 1y array and 1mAvg price
+
+    MatchAvg()
+    Match1dd()
+    MatchDays()
+    MatchSellP()
+    Own()
+    
+    da.Log2(["Update11PM:END"])
+  }  
+}

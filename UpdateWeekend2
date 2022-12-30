@@ -1,0 +1,10 @@
+function UpdateWeekend2() {
+  
+  da.Log2(["UpdateWeekend2>"])
+
+  PerformanceLong(2)
+  PerformanceLong(3)
+  
+  da.Log2(["UpdateWeekend2<"])
+
+}

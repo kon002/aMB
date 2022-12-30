@@ -1,0 +1,25 @@
+function PricesYSetList(){
+  
+  var list = ""
+  
+  var arrSymbols = g.AddSheet(ssPrice)  //MB | ssPrice)
+//  var arrSymbolsMB = g.AddSheet(ssMB)  //MB | ssPrice)
+  
+  for (var i = 6; i < 100; i++)  // arrSymbols.length
+  {
+    var symbol = arrSymbols[i]
+    if (symbol != "" && symbol != "END")
+    {
+//      if (f.InStr(arrSymbolsMB, symbol) < 1)
+      {
+        list = list + symbol + ","
+      }
+    }
+  }
+  
+  list = "https://finance.yahoo.com/quotes/" + list
+  s.SetV(ssPrY, 2, "URL", list)
+  
+}
+
+

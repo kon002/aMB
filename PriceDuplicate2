@@ -1,0 +1,41 @@
+function PriceDuplicate2(label) {
+  
+  if (label == f.cUndefined())
+  {
+    label = "Ark"
+    f.Debug(true)
+  }
+  
+  f.log(["label", label])
+  var arr = g.AddSheet(ssP)
+  var arrSymbols = g.AddSheetWN(ssPrice)
+  
+  for (var i = 1; i < arr.length; i++)
+  {
+    var symbol = arr[i]
+    if (symbol > ".")
+//    if (symbol == "ARGX")
+    {
+      g.W(ssP, symbol, label, "")
+      g.WN(ssP, symbol, label, "") //** clear notes
+      if (f.InStr(arrSymbols, symbol) > 0)
+      {
+        var val = g.R(ssPrice, symbol, label)
+        if (val != "")
+        {
+          g.W(ssP, symbol, label, val)
+          var note = g.RN(ssPrice, symbol, label)
+//          f.log(["label>write", label, symbol, val, note])
+          g.WN(ssP, symbol, label, note)
+        }
+      }
+    }
+  }
+  
+  if (f.Debug())
+  {
+    f.log(["Saving ssP"])
+    g.ASave(ssP)
+  }
+
+}

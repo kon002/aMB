@@ -1,0 +1,61 @@
+function UpdateWeekend3() {
+  
+  da.Log2(["UpdateWeekend3:Start"])
+
+  //** Profitability
+  var arrSymbols = g.AddSheetWN(ssMB)
+  //** clear all
+  var start = 19
+  var end = start + 150  //** arrSymbols.length
+  
+  for (var ii = start; ii < end; ii++) //** arrSymbols.length
+  {
+    g.W(ssMB, symbol, "Proft", "")
+    g.W(ssMB, symbol, "Net%", "")
+  }
+  
+  for (var ii = start; ii < end; ii++) //** arrSymbols.length
+  {
+      var symbol = arrSymbols[ii]
+//      var symbol = "CVNA" 
+      
+      if (symbol != "")
+      {
+        f.log(["symbol", symbol])
+        
+        var dict = y.YahooGetKeyStatistics(symbol)
+
+        var ProfitMargin = f.Int(Dict.R("ProfitMargin"))
+        var TrailingPE = f.Int(Dict.R("TrailingPE"))
+        var PriceBook = f.Int(Dict.R("PriceBook"))
+        var ReturnOAssets = f.Int(Dict.R("ReturnOAssets"))
+        var MarketCap = f.Int(Dict.R("MarketCap"))
+        var NetIncome = f.Int(Dict.R("NetIncome"))
+        var NetIncomePercFromMCap = (Dict.R("NetIncomePercFromMCap"))
+        var ForwardPE = Dict.R("ForwardPE")
+        var TotalDebtPercFromMCap = Dict.R("TotalDebtPercFromMCap")
+        
+//        f.log(["MarketCap", MarketCap, NetIncome, NetIncomePercFromMCap])
+        
+        g.W(ssMB, symbol, "Proft", ProfitMargin)
+        g.W(ssMB, symbol, "Net%", NetIncomePercFromMCap)
+        g.WN(ssMB, symbol, "Net%", d.TimeStamp())
+        
+        var notes = d.Today() + f.CR
+        notes = notes + "Prof.Margin: \t" + f.FormatN(ProfitMargin, 2) + f.CR
+        notes = notes + "TPE: \t\t" + f.FormatN(TrailingPE, 3) + f.CR
+        notes = notes + "FPE: \t\t" + f.FormatN(ForwardPE, 3) + f.CR
+        notes = notes + "P/B: \t\t" + f.FormatN(PriceBook, 2) + f.CR
+        notes = notes + "RoA: \t\t" + f.FormatN(ReturnOAssets, 2) + f.CR
+        notes = notes + "Debt%: \t\t" + TotalDebtPercFromMCap + f.CR
+        g.WN(ssMB, symbol, "Proft", notes)
+        
+        f.Wait(500)
+      }
+  }  
+  
+  g.ASave(ssMB)
+  
+  da.Log2(["UpdateWeekend3:End"])
+
+}

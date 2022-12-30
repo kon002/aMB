@@ -1,0 +1,43 @@
+function MB() {
+  
+  var sasMBs = SpreadsheetApp.openById("1n-tss5EPPwhBqazuzHoPQ3IQDVF-nrUpWvcZTil5u8Y");  //** MBs
+  var ssA = sasMBs.getSheetByName("A")  //** 
+  
+  var arrSymbols = g.AddSheet(ssA)
+//  var arr = g.AddSheetWN(ssMB)
+  
+  for (var i = 1; i < arrSymbols.length; i++)  //arrSymbols.length
+  {
+    var symbol = arrSymbols[i]  
+    var price = g.R(ssA, symbol, "Price")
+    if (price > 0)
+//    if (symbol == "BIP")
+    {
+      var price = g.R(ssA, symbol, "Price")
+      var perc = g.R(ssA, symbol, "Perc")
+      var Cap = g.R(ssA, symbol, "Cap")
+      var TimeStamp = g.R(ssA, symbol, "TS")
+      var hi52 = g.R(ssA, symbol, "Hi52")
+      var Avg = g.R(ssA, symbol, "1mAvg")
+      Avg = (price - Avg)/Avg*100
+      
+      g.W(ssMB, symbol, "Price", price)
+      g.W(ssMB, symbol, "1d", perc)
+      g.W(ssMB, symbol, "Hi52", hi52)
+      g.W(ssMB, symbol, "Cap", Cap)
+      g.W(ssMB, symbol, "Avg", Avg)
+
+      g.WN(ssMB, symbol, "Price", TimeStamp)
+      g.WN(ssMB, symbol, "1d", TimeStamp)
+      g.WN(ssMB, symbol, "Hi52", TimeStamp)
+      g.WN(ssMB, symbol, "Cap", TimeStamp)
+      g.WN(ssMB, symbol, "Avg", TimeStamp)
+//      f.log(["symbol", symbol, price, perc, hi52])
+      var PExist = g.R(ssPrice, symbol, "Symbol")
+      g.W(ssMB, symbol, "PExist", PExist)
+    }
+  }
+  
+  g.ASave(ssMB)
+
+}

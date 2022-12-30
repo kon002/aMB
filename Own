@@ -1,0 +1,44 @@
+function Own() {
+  //** 
+  t.Run("Own")
+  
+  var sasR = SpreadsheetApp.openById("1H8UsPnwPUH1BnkPDraHtM1wWkDuwagcv1QzGFZCCb-A");
+  var ssWU = sasR.getSheetByName("WU")    //** WU
+  var ssWRU = sasR.getSheetByName("WRU")  //** WRU
+
+  var ssWN = sasR.getSheetByName("WN")    
+  var ssWF = sasR.getSheetByName("WF")  
+  var ssWR = sasR.getSheetByName("WR")    
+  
+  //** combine US assets in a single arrays
+  var arrWU = s.GetColIntoArray(ssWU, "Symbol")
+  var arrWUAmt = s.GetColIntoArray(ssWU, "Amt")
+  var arrWRU = s.GetColIntoArray(ssWRU, "Symbol")
+  var arrWRUAmt = s.GetColIntoArray(ssWRU, "Amt")
+  arrWU = a.CombineArrays(arrWRU, arrWU)
+  arrWUAmt = a.CombineArrays(arrWRUAmt, arrWUAmt)
+//  f.log([arrWU])
+//  return
+  
+  //** combine CAD assets in a single arrays
+  var arrWN = s.GetColIntoArray(ssWN, "Symbol")
+  var arrWNAmt = s.GetColIntoArray(ssWN, "Amt")
+  
+  var arrWF = s.GetColIntoArray(ssWF, "Symbol")
+  var arrWFAmt = s.GetColIntoArray(ssWF, "Amt")
+  arrWN = a.CombineArrays(arrWF, arrWN)
+  arrWNAmt = a.CombineArrays(arrWFAmt, arrWNAmt)
+  
+  var arrWR = s.GetColIntoArray(ssWR, "Symbol")
+  var arrWRAmt = s.GetColIntoArray(ssWR, "Amt")
+  arrWN = a.CombineArrays(arrWR, arrWN)
+  arrWNAmt = a.CombineArrays(arrWRAmt, arrWNAmt)
+
+  Own2(ssMB, arrWU, arrWUAmt, arrWN, arrWNAmt)
+  Own2(ssPrice, arrWU, arrWUAmt, arrWN, arrWNAmt)
+  
+  t.ShowTimeInterval("Own")
+  
+}
+
+

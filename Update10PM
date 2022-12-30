@@ -1,0 +1,16 @@
+function Update10PM() {
+  
+  if (d.Weekend() == false)
+  {
+    da.Log2(["Update10PM>"])
+
+    p.PriceArrays()
+    PerformanceShort()
+    Match1y()
+    
+    da.Log2(["Update10PM:End"])
+  }
+  
+}
+
+

@@ -1,0 +1,476 @@
+function MatchNameNote() {
+
+  var arrSymbols = g.AddSheet(ssPrice)
+  var arrMB = g.AddSheet(ssMB)
+  
+  for (var i = 1; i < arrSymbols.length; i++)
+  {
+    var symbol = arrSymbols[i]
+    if (symbol > ".")
+    {
+      if (f.InStr(arrMB, symbol) > 0)
+      {
+        var nameNote = g.RN(ssMB, symbol, "Name")
+        if (nameNote != "")
+        {
+          f.log(["nameNote", nameNote])
+          g.WN(ssPrice, symbol, "Name", nameNote)
+//          break
+        }
+      }
+    }
+  }
+  g.ASave(ssPrice)
+
+}
+
+
+function MatchSellP() {
+
+  var arrSymbols = g.AddSheet(ssPrice)
+  var arrMB = g.AddSheet(ssMB)
+  
+  for (var i = 1; i < arrSymbols.length; i++)
+  {
+    var symbol = arrSymbols[i]
+    if (symbol > ".")
+    {
+      g.W(ssPrice, symbol, "sellP", "")
+      g.WN(ssPrice, symbol, "sellP", "") //** clear notes
+      if (f.InStr(arrMB, symbol) > 0)
+      {
+        var sellP = g.R(ssMB, symbol, "sellP")
+        if (sellP != "")
+        {
+          g.W(ssPrice, symbol, "sellP", sellP)
+          g.WN(ssPrice, symbol, "sellP", d.Today())
+        }
+      }
+    }
+  }
+  g.ASave(ssPrice)
+
+}
+
+
+function MatchMB() {
+
+  var arrSymbols = g.AddSheet(ssPrice)
+  var arrMB = g.AddSheet(ssMB)
+  
+  for (var i = 1; i < arrSymbols.length; i++)
+  {
+    var symbol = arrSymbols[i]
+    if (symbol > ".")
+    {
+      g.W(ssPrice, symbol, "MB", "")
+      g.WN(ssPrice, symbol, "MB", "") //** clear notes
+      if (f.InStr(arrMB, symbol) > 0)
+      {
+        var rate = g.R(ssMB, symbol, "Rate")
+        if (rate != "")
+        {
+          g.W(ssPrice, symbol, "MB", rate)
+          g.WN(ssPrice, symbol, "MB", d.Today())
+        }
+      }
+    }
+  }
+  g.ASave(ssPrice)
+
+}
+
+
+function MatchOwn() {
+
+  var arrSymbols = g.AddSheet(ssPrice)
+  var arrMB = g.AddSheet(ssMB)
+  
+  for (var i = 1; i < arrSymbols.length; i++)
+  {
+    var symbol = arrSymbols[i]
+    if (symbol > ".")
+    {
+      g.W(ssPrice, symbol, "Own", "")
+      g.WN(ssPrice, symbol, "Own", "") //** clear notes
+      if (f.InStr(arrMB, symbol) > 0)
+      {
+        var rate = g.R(ssMB, symbol, "USCAD")
+        if (rate != "")
+        {
+          g.W(ssPrice, symbol, "Own", rate)
+          g.WN(ssPrice, symbol, "Own", d.Today())
+        }
+      }
+    }
+  }
+  g.ASave(ssPrice)
+
+}
+
+
+function MatchDays() {
+  
+  g.AddSheet(ssLow)
+  var arrSymbolLow = g.GetColIntoArray(ssLow, "Symbol")
+  
+  var arrSymbol = g.AddSheetWN(ssMB)
+  var arrSellP = g.GetColIntoArray(ssMB, "sellP")
+  
+  for (var i = 3; i < arrSymbol.length; i++)
+  {
+    var symbol = arrSymbol[i]
+    if (symbol.length > 1)
+    {
+//      f.log(["symbol", symbol, "'" + symbol + "'"])
+      g.W(ssMB, symbol, "Days", "") //** clear Old
+      var row = f.InStr(arrSymbolLow, symbol)
+      if (arrSellP[i] != "")
+      {
+        if (row > 0)
+        {
+          var amt = g.R(ssLow, row, "Amt")
+//          f.log(["symbol, amt, row", symbol, amt, row, f.Val(amt)])
+          if (amt != "0")  
+          {
+            var date = g.R(ssLow, row, "SugLoan")
+            var dateDiff = d.DateDiff(d.SetDate(d.Today()), date)
+            //          f.log([symbol, dateDiff])
+            g.W(ssMB, symbol, "Days", dateDiff)
+            g.WN(ssMB, symbol, "Days", dateDiff + " - " + d.Today())
+          }
+          var perc = g.R(ssMB, symbol, "sellP")
+          s.W(ssLow, row, "MBPerc", perc)
+        }
+      }
+    }
+  }
+  g.ASave(ssMB)
+
+}
+
+
+function Match1y(){
+
+  t.Run("")
+  
+  var arrMB = g.AddSheet(ssMB)
+  var arrSymbol = g.AddSheet(ssPrice)
+
+  for (var i = 3; i < arrMB.length; i++)  //arrSymbol.length
+  {
+    var symbol = arrMB[i]
+//    if (symbol == "MRU.TO")
+    if (symbol > ".")
+    {
+      if (f.InStr(arrSymbol, symbol))
+      {
+        g.W(ssMB, symbol, "1y", "")
+        g.WN(ssMB, symbol, "1y", "")
+        var perf = g.R(ssPrice, symbol, "1y")
+//        f.log(["Match1y", symbol, perf])
+//        if (perf != "")
+        {
+          g.W(ssMB, symbol, "1y", perf)
+          
+          var notes = f.FormatN("1m", 7) + f.FormatN("3m", 7) + f.FormatN("1y", 8) + f.FormatN("3y", 8) + f.CR
+          notes = notes + "                                                  " + f.CR
+          var m1 = g.R(ssPrice, symbol, "1m")
+          var m3 = g.R(ssPrice, symbol, "3m")
+          var y1 = g.R(ssPrice, symbol, "1y")
+          var y3 = g.R(ssPrice, symbol, "3y")
+          notes = notes + f.FormatN(f.Dec(m1, 1), 8) + f.FormatN(f.Dec(m3, 1), 8) + f.FormatN(f.Dec(y1, 1), 8) + f.FormatN(f.Dec(y3, 1), 8)
+          notes = notes + f.CR + f.CR
+          notes = notes + "                  " + d.GetDateTime()
+          //        log(i+1, notes)
+          g.WN(ssMB, symbol, "1y", notes)
+//          f.log(["notes", symbol, notes])
+//          break
+        }
+      }
+    }
+  }
+//  return
+  
+  g.ASave(ssMB)
+  
+  t.ShowTimeInterval2()
+
+}
+
+
+
+
+function MatchD1w(){
+  
+  t.AStop(1)
+  
+  var arrSymbolsY = g.AddSheetWN(ssPC)
+  var arrSymbols = g.AddSheet(ssMB)
+//  return
+  
+  for (var i = 3; i < arrSymbols.length; i++)
+  {
+    var symbol = arrSymbols[i]
+    if (symbol != "")
+    {
+      var drop = g.R(ssPC, symbol, "D1w") 
+      g.W(ssMB, symbol, "D1w", drop)
+      var dropN = g.RN(ssPC, symbol, "D1w") 
+      g.WN(ssMB, symbol, "D1w", dropN)
+      
+      var rise = g.R(ssPC, symbol, "R1w") 
+      g.W(ssMB, symbol, "R1w", rise)
+      var riseN = g.RN(ssPC, symbol, "R1w") 
+      g.WN(ssMB, symbol, "R1w", riseN)
+    }
+  }
+    
+  g.ASave(ssMB)
+//  return
+
+}
+
+
+
+
+function Match1dd() {
+  //** yesterday perc
+
+  if (d.GetFullTime24H() > "13:00")
+  {
+    var arrSymbol = g.AddSheet(ssPrice)
+    
+    for (var i = 4; i < arrSymbol.length; i++)  //a.length(arrSymbol)
+    {
+      var symbol = arrSymbol[i]
+      if (symbol > ".")
+      {
+        g.WN(ssPrice, symbol, "1dd", d.Today())
+        var change = g.R(ssPrice, symbol, "1d")
+        if (change != "")
+        {
+          g.W(ssMB, symbol, "1dd", change)
+          g.W(ssPrice, symbol, "1dd", change)
+          g.WN(ssPrice, symbol, "1dd", d.Today())
+        }
+      }
+    }
+    
+    g.ASave(ssMB)
+    g.ASave(ssPrice)
+    
+  }
+}
+
+
+function MatchRate(){
+
+  var arrSymbol = g.AddSheet(ssMB)
+
+  for (var i = 3; i < arrSymbol.length; i++)  //a.length(arrSymbol)
+  {
+    var symbol = arrSymbol[i]
+    if (symbol != "")
+    {
+      var RateMB = g.R(ssMB, symbol, "Rate")
+      if (RateMB == "")
+      {
+        var Rate = g.R(ssPrice, symbol, "Rate")
+        if (Rate != "")
+        {
+          g.W(ssMB, symbol, "Rate", Rate)
+        }
+      }
+    }
+  }
+  
+  g.ASave(ssMB)
+
+}
+
+
+function MatchSPPrice(){
+
+  var arrSymbol = g.AddSheet(ssPrice)
+
+  for (var i = 3; i < arrSymbol.length; i++)  //a.length(arrSymbol)
+  {
+    var symbol = arrSymbol[i]
+    if (symbol != "")
+    {
+      var SP500MB = g.R(ssPrice, symbol, "SP500")
+      if (SP500MB == "")
+      {
+        var SP500 = g.R(ssMB, symbol, "SP500")
+        f.log(["symbol", symbol, SP500])
+        if (SP500 != "")
+        {
+          g.W(ssPrice, symbol, "SP500", SP500)
+        }
+      }
+      var SP500MB = g.R(ssPrice, symbol, "S&P")
+      if (SP500MB == "")
+      {
+        var SP500 = g.R(ssMB, symbol, "S&P")
+        if (SP500 != "")
+        {
+          g.W(ssPrice, symbol, "S&P", SP500)
+        }
+      }
+    }
+  }
+  
+  g.ASave(ssPrice)
+
+}
+
+function MatchSPMB(){
+
+  var arrSymbol = g.AddSheet(ssMB)
+
+  for (var i = 3; i < arrSymbol.length; i++)  //a.length(arrSymbol)
+  {
+    var symbol = arrSymbol[i]
+    if (symbol != "")
+    {
+      var SP500MB = g.R(ssMB, symbol, "SP500")
+      if (SP500MB == "")
+      {
+        var SP500 = g.R(ssPrice, symbol, "SP500")
+        if (SP500 != "")
+        {
+          g.W(ssMB, symbol, "SP500", SP500)
+        }
+      }
+      var SP500MB = g.R(ssMB, symbol, "S&P")
+      if (SP500MB == "")
+      {
+        var SP500 = g.R(ssPrice, symbol, "S&P")
+        if (SP500 != "")
+        {
+          g.W(ssMB, symbol, "S&P", SP500)
+        }
+      }
+    }
+  }
+  
+  g.ASave(ssMB)
+
+}
+
+
+function MatchSPPP(){
+
+  var arrSymbol = g.AddSheet(ssPP)
+
+  for (var i = 1; i < arrSymbol.length; i++)  //a.length(arrSymbol)
+  {
+    var symbol = arrSymbol[i]
+    if (symbol != "")
+    {
+      if (g.R(ssMB, symbol, "Symbol") != "")
+      {
+        {
+          var PerfCombined = g.R(ssPP, symbol, "PerfCombined")
+//          f.log(["symbol", symbol, PerfCombined])
+          g.W(ssMB, symbol, "S&P", PerfCombined)
+//          return
+        }
+      }
+
+      if (g.R(ssPrice, symbol, "Symbol") != "")
+      {
+        {
+          var PerfCombined = g.R(ssPP, symbol, "PerfCombined")
+          //          f.log(["symbol", symbol, PerfCombined])
+          g.W(ssPrice, symbol, "S&P", PerfCombined)
+          //          return
+        }
+      }
+    }
+  }
+
+  g.ASave(ssMB)
+  g.ASave(ssPrice)
+
+}
+
+
+function MatchIndustry() {
+  
+  var arrSymbol = g.AddSheet(ssYP)
+
+  for (var i = 1; i < arrSymbol.length; i++)  //a.length(arrSymbol)
+  {
+    var symbol = arrSymbol[i]
+    if (symbol != "")
+    {
+      if (g.R(ssPrice, symbol, "Symbol") != "")
+      {
+        if (g.R(ssPrice, symbol, "Industry") == "")
+        {
+          var industry = g.R(ssYP, symbol, "Industry")
+          f.log(["symbol", symbol, industry])
+          g.W(ssPrice, symbol, "Industry", industry)
+        }
+      }
+    
+      if (g.R(ssMB, symbol, "Symbol") != "")
+      {
+//        if (g.R(ssMB, symbol, "Industry") == "")
+        {
+          var industry = g.R(ssYP, symbol, "Industry")
+          f.log(["symbol", symbol, industry])
+          g.W(ssMB, symbol, "Industry", industry)
+        }
+      }
+    }
+  }
+  
+  g.ASave(ssPrice)
+  g.ASave(ssMB)
+
+}
+
+
+function MatchAvg() {
+
+  t.Run("MatchAvg")
+  
+  var arrSymbolMB = s.GetColIntoArray(ssMB, "Symbol")
+  var arrPrice = s.GetColIntoArray(ssMB, "Price")
+//  t.ShowTimeInterval("MatchAvg")
+//  return
+  
+
+//  g.AddSheet(ssPA)
+
+  //** update ssMB sheet
+  for (var i = 3; i < arrSymbolMB.length; i++)  //arrSymbol.length
+  {
+    var symbol = arrSymbolMB[i]
+//    if (symbol == "STNE")
+    if (symbol != "")
+    {
+      s.S(ssMB, i+1, "Avg", "")
+      s.SN(ssMB, i+1, "Avg", "")  // TS  d.GetDateTimeFull())
+      var avgPrice = g.R(ssPA, symbol, "1mAvg")
+      if (f.nuv(avgPrice) > 0 && arrPrice[i] > 0)
+      {
+//        f.log([avgPrice, arrPrice[i]])
+        var perc = f.Perc(avgPrice, arrPrice[i])
+        var TS = g.R(ssPA, symbol, "TS")
+        TS = TS + f.CR + "   Avg: " + avgPrice
+        s.S(ssMB, i+1, "Avg", perc)
+        s.SN(ssMB, i+1, "Avg", TS)  // TS  d.GetDateTimeFull())
+//        f.log(["symbol, perc from Avg1m", symbol, perc])
+      }
+    }
+  }
+
+  t.ShowTimeInterval("MatchAvg")
+}
+
+
+

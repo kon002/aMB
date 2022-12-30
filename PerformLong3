@@ -1,0 +1,57 @@
+function GetPerformanceLongSince2(symbol, startYear) {
+  
+  if (f.Undefined(symbol))
+  {
+    symbol = "XPEV"
+    var arrSymbol = g.AddSheetWN(ssPrice) 
+  }
+
+  //** clear notes first
+  g.WN(ssPrice, symbol, "1\"", "")  //**TS
+  g.WN(ssPrice, symbol, "3\"", "")
+  g.WN(ssPrice, symbol, "5\"", "")
+  g.WN(ssPrice, symbol, "10\"", "")
+//  g.WN(ssPrice, symbol, "15\"", "")
+  
+  var arr = p.PerformanceLong(symbol, startYear)
+  if (arr != f.cUndefined())
+  {
+    var TS = "as of - " + arr[5] //d.Format(d.AddYears(d.SetDate(f.Left2(arr[5], 10)), - 1))
+    f.log(["startYear, TS", startYear, TS])
+    
+//    if (symbol == "XPEV")
+//    {
+//      f.log([symbol, TS])
+//    }
+    g.W(ssPrice, symbol, "1\"", arr[0])
+    g.W(ssPrice, symbol, "3\"", arr[1])
+    g.W(ssPrice, symbol, "5\"", arr[2])
+    g.W(ssPrice, symbol, "10\"", arr[3])
+//    g.W(ssPrice, symbol, "15\"", arr[4])
+
+//    return
+
+    if (f.nul(arr[0]) != "")
+    {    
+//      f.log(["WN", symbol, TS])
+      g.WN(ssPrice, symbol, "1\"", TS)  //**TS
+    }
+    if (f.nul(arr[1]) != "")
+    {    
+      g.WN(ssPrice, symbol, "3\"", TS)
+    }
+    if (f.nul(arr[2]) != "")
+    {    
+      g.WN(ssPrice, symbol, "5\"", TS)
+    }
+    if (f.nul(arr[3]) != "")
+    {    
+      g.WN(ssPrice, symbol, "10\"", TS)
+    }
+    if (f.nul(arr[4]) != "")
+    {    
+//      g.WN(ssPrice, symbol, "15\"", TS)
+    }
+  }
+  
+}

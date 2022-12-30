@@ -1,0 +1,49 @@
+function GetPerformanceLong(symbol) {
+  
+  if (symbol == f.cUndefined())
+  {
+    symbol = "CP.TO"
+  }
+  
+  //** clear notes first
+  g.WN(ssPrice, symbol, "1y", "")  //**TS
+  g.WN(ssPrice, symbol, "3y", "")
+  g.WN(ssPrice, symbol, "5y", "")
+  g.WN(ssPrice, symbol, "10y", "")
+  g.WN(ssPrice, symbol, "15y", "")
+  
+  var arr = p.PerformanceLong(symbol, 0)
+  if (arr != f.cUndefined())
+  {
+    var TS = "as of - " + arr[5] //f.Left2(arr[5], 10)
+//    f.log([symbol, TS])
+    g.W(ssPrice, symbol, "1y", arr[0])
+    g.W(ssPrice, symbol, "3y", arr[1])
+    g.W(ssPrice, symbol, "5y", arr[2])
+    g.W(ssPrice, symbol, "10y", arr[3])
+    g.W(ssPrice, symbol, "15y", arr[4])
+    f.log(["1y, 3y, 5y", symbol, arr])
+
+    if (f.nul(arr[0]) != "")
+    {    
+      g.WN(ssPrice, symbol, "1y", TS)  //**TS
+    }
+    if (f.nul(arr[1]) != "")
+    {    
+      g.WN(ssPrice, symbol, "3y", TS)
+    }
+    if (f.nul(arr[2]) != "")
+    {    
+      g.WN(ssPrice, symbol, "5y", TS)
+    }
+    if (f.nul(arr[3]) != "")
+    {    
+      g.WN(ssPrice, symbol, "10y", TS)
+    }
+    if (f.nul(arr[4]) != "")
+    {    
+      g.WN(ssPrice, symbol, "15y", TS)
+    }
+  }
+}
+

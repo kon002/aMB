@@ -1,0 +1,18 @@
+function PricesCopy() {
+  
+  var sasPrices = SpreadsheetApp.openById("1n-tss5EPPwhBqazuzHoPQ3IQDVF-nrUpWvcZTil5u8Y");  //** Prices
+  var ssA = sasPrices.getSheetByName("A")  //** 
+  
+  var arrSymbols = g.AddSheet(ssA)
+  
+  for (var i = 1; i < arrSymbols.length; i++)  //arrSymbols.length
+  {
+    var symbol = arrSymbols[i]  
+    var price = g.R(ssPrice, symbol, "Price")
+    g.W(ssA, symbol, "Price", price)
+    g.W(ssA, symbol, "TS", d.TimeStamp())
+  }
+  
+  g.ASave(ssA)
+
+}

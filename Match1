@@ -1,0 +1,70 @@
+function UpdateTableCol(ss, colLabel, arrData){
+  var arrSymbol = f.GetSymbols(ssPrice)
+  var arrCol = s.GetColIntoArray(ss, "Symbol")
+
+  if (arrData == f.cUndefined())
+  {
+    arrData = s.GetColIntoArray(ssPrice, colLabel)
+  }
+  
+//  f.log(["UpdateTableCol", ss.getName(), colLabel, arrData])
+
+  for (var i = 1; i < arrCol.length; i++)  //a.length(arrSymbol)
+  {
+    if (arrCol[i] > "")
+    {
+      var ind = f.InStr(arrSymbol, arrCol[i])
+      if (ind)
+      {
+        ind--
+        var row = i+1
+        s.SetV(ss, row, colLabel, arrData[ind])
+//        f.log([s.Name(ss), row, colLabel, arrData[ind]])
+//        da.Log2(["ss, row, colLabel, arrData[ind], arrSymbol[ind]", ss, row, colLabel, arrData[ind], arrSymbol[ind]])
+//        break
+      }
+    }
+  }
+
+}
+
+
+function UpdateTableColNotes(ss, colLabel){
+  var arrSymbol = f.GetSymbols(ssPrice)
+  var arrData = s.GetColNotes(ssPrice, colLabel)
+  var arrCol = s.GetColIntoArray(ss, "Symbol")
+
+  for (var i = 1; i < arrCol.length; i++)  //a.length(arrSymbol)
+  {
+    var ind = f.InStr(arrSymbol, arrCol[i])
+    if (ind)
+    {
+      ind--
+      var row = i+1
+      s.SetN(ss, row, colLabel, arrData[ind])
+    }
+  }
+
+}
+
+
+function UpdateTableRow(ss, colLabel){
+  var arrSymbol = f.GetSymbols(ssPrice)
+  var arrData = s.GetColIntoArray(ssPrice, colLabel)
+  var arrCol = s.GetRowIntoSingleArray(ss, 1)
+  
+  f.log("UpdateTableRow", colLabel)
+  
+  for (var i = 1; i < arrCol.length; i++)  //a.length(arrSymbol)
+  {
+    var rowY = f.InStr(arrSymbol, arrCol[i])
+    if (rowY)
+    {
+      var col = i+1
+      s.SetV(ss, f2.PD_HeaderRows+1, col, arrData[rowY-1])
+    }
+  }
+
+}
+
+

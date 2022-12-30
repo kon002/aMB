@@ -1,0 +1,44 @@
+function GetActiveSymbols(arrSymbols) {
+
+  var end = f.InStr(arrSymbols, "END")
+
+  if (end > 0)
+  {
+    return a.CopyArray3(arrSymbols, 4, end-1)
+  }
+  else
+  {
+    return arrSymbols
+  }
+}
+
+
+function log(msg) {
+  
+  Logger.log(PrepareMsg(msg))
+  
+}
+
+
+function PrepareMsg(msg) {
+  
+  var str = " | "
+  
+  if (typeof msg == "string")
+  {
+    str = msg
+  }
+  else
+  {
+    for (var i = 1; i < msg.length; i++)
+    {
+      str = str + msg[i]  + " | " 
+    }
+    str = msg[0] + " : " + str
+
+  }
+  
+  return "\n" + str + "\n"
+
+}
+

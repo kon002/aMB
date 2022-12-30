@@ -1,0 +1,70 @@
+function StaYahooKeyStat(startRow) {
+  t.Run()
+  
+  var arr = s.GetColIntoArray(ssSta, "Symbol")
+  var arrTPE = s.GetColIntoArray(ssSta, "TPE")
+  var arrOM = s.GetColIntoArray(ssSta, "OM")
+    
+  if (startRow == f.cUndefined())
+  {
+    startRow = s.GetV(ssSta, 2, "Cap")
+    var startRow = 475
+  }
+  
+//  Log2("StaYahooKeyStat:startRow: " + startRow)
+  f.log(["startRow", startRow, arr.length])
+//  return
+  
+  for (var i = startRow-1; i < arr.length; i++)  //a.length(arr)
+  {
+    var symbol = arr[i]
+    f.log(["symbol0", symbol, arrTPE[i], arrOM[i]])
+//    if (arrTPE[i] == 0) // && arr[i] == "ENPH")
+    {
+      f.log(["symbol1", symbol, arrTPE[i], arrOM[i]])
+      var arrYahoo = y.YahooGetKeyStatistics(symbol)
+      
+      if (arrYahoo[cYahooTPE] != "" || arrYahoo[cYahooFPE] != "" || arrYahoo[cYahooTPE] != "" || arrYahoo[cYahooDebt] != "" || arrYahoo[cYahooRetOnAssets] != ""  || arrYahoo[cYahooOpMargin] != "")
+      {
+        f.log(["symbol2***", symbol])
+//        return
+        var row = i+1
+        var EV = f.nul(arrYahoo[cYahooEVal])
+        var NetIncome = f.nul(arrYahoo[cYahooNetIncome])
+        var Profit = ""
+        if (EV != "" && NetIncome != "")
+        {
+          Profit = NetIncome / EV * 100
+          f.log(["Profit", Profit])
+        }
+        s.SetV(ssSta, row, "Debt", f.nul(arrYahoo[cYahooDebt]))
+        s.SetV(ssSta, row, "TPE", arrYahoo[cYahooTPE])
+        s.SetV(ssSta, row, "FPE", arrYahoo[cYahooFPE])
+        s.SetV(ssSta, row, "OM", arrYahoo[cYahooOpMargin])
+        s.SetV(ssSta, row, "RoA", arrYahoo[cYahooRetOnAssets])
+        s.SetV(ssSta, row, "P/B", f.nul(arrYahoo[cYahooPriceBook]))
+        s.SetV(ssSta, row, "Profit", Profit)
+//        s.SetV(ssSta, row, "Debt/E", f.nul(arrYahoo[cYahooDebtE]))
+      }
+//      return
+      
+      startRow = i + 2
+      s.SetV(ssSta, 2, "Cap", startRow)
+      
+      f.log(["t.GetTimePassed()", t.GetTimePassed()])
+      if (t.GetTimePassed() > 50000) //** 50sec
+      {
+//        CallMeBack("StaYahooKeyStat")
+        return
+      }
+      
+      f.Wait(100)
+    }
+  }
+  
+  s.SetN(ssSta, 1, "FPE", d.GetDateTime())
+  
+  s.SetV(ssSta, 2, "Cap", f2.PD_HeaderRows+1)
+  
+  da.Log2("StaYahooKeyStat: **END**")
+}

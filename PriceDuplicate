@@ -1,0 +1,41 @@
+function PriceDuplicate() {
+  
+  t.Run2()
+  
+//  PriceDuplicate2("Hi52")
+
+//  PriceDuplicate2("Name")
+
+  PriceDuplicate2("1d")
+  PriceDuplicate2("1dd")
+  PriceDuplicate2("1wk")
+  PriceDuplicate2("1m")
+  PriceDuplicate2("3m")
+//
+//  PriceDuplicate2("Own")
+//
+//  PriceDuplicate2("1y")
+//  PriceDuplicate2("3y")
+//  PriceDuplicate2("5y")
+//  PriceDuplicate2("10y")
+//  PriceDuplicate2("15y")
+//
+//  PriceDuplicate2("1'")
+//  PriceDuplicate2("3'")
+//  PriceDuplicate2("5'")
+//  PriceDuplicate2("10'")
+//  PriceDuplicate2("15'")
+//
+//  PriceDuplicate2("1\"")
+//  PriceDuplicate2("3\"")
+//  PriceDuplicate2("5\"")
+  PriceDuplicate2("10\"")
+//
+//  PriceDuplicate2("Ark")
+//  PriceDuplicate2("MB")
+
+  g.ASave(ssP)
+  
+  t.ShowTimeInterval2()
+
+}

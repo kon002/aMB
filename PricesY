@@ -1,0 +1,55 @@
+function PricesY(){
+  //** fast yahoo prices
+  
+  t.AStop(1)
+  
+  var arrSymbolsY = g.AddSheet(ssPrY)
+  var arrSymbols = g.AddSheetWN(ssMB)
+//  f.log(["arrSymbols", arrSymbols.length])
+//  return
+  
+  for (var i = 2; i < arrSymbols.length; i++)
+  {
+      var symbol = arrSymbols[i]
+//      f.log(["symbol", symbol])
+      if (symbol != "")
+//      if (symbol == "FSLY")
+      {
+        var price = g.R(ssPrY, symbol, "Price")
+        {
+          g.W(ssMB, symbol, "Price", "")
+          if (price > 0)
+          {
+            var perc = g.R(ssPrY, symbol, "Chg%") 
+            perc = perc * 100
+            var hi52 = g.R(ssPrY, symbol, "Hi52")
+            var div = g.R(ssPrY, symbol, "Div") 
+            div = f.nuv(div) * 100
+            var cap = g.R(ssPrY, symbol, "Cap") 
+            cap = y.ConvertToBilions(cap)
+            cap = f.Int(cap)
+            g.W(ssMB, symbol, "Price", price)
+            g.WN(ssMB, symbol, "Price", d.TimeStamp())
+            g.W(ssMB, symbol, "1d", perc)
+            g.WN(ssMB, symbol, "1d", d.TimeStamp())
+            g.W(ssMB, symbol, "Div", div)
+//            g.WN(ssMB, symbol, "Div", d.TimeStamp())
+            g.W(ssMB, symbol, "Hi52", hi52)
+            g.WN(ssMB, symbol, "Hi52", d.TimeStamp())
+            g.W(ssMB, symbol, "Cap", cap)
+            g.WN(ssMB, symbol, "Cap", d.TimeStamp())
+//            f.log([symbol, cap])
+//            break
+          }
+        }
+      }
+  }
+//  return
+    
+  g.W(ssMB, "AAA", "Price", d.GetTime())
+  
+  g.ASave(ssMB)
+  
+}
+
+

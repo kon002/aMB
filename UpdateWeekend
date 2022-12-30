@@ -1,0 +1,12 @@
+function UpdateWeekend() {
+  
+  da.Log2(["UpdateWeekend:Start"])
+
+  p.PriceArrays15y()
+  
+  PerformanceLong(1)
+  Match1y()
+  
+  da.Log2(["UpdateWeekend:End"])
+  
+}
