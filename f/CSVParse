@@ -1,0 +1,24 @@
+function CSVParse(str) {
+  
+  //** add end separator
+  str = str + ","
+
+  //** first get items with "" to remove , inside
+  var item = f.RegExStartEnd(str, "\"", "\"")
+  for (var i = 1; i <= item.length; i++)
+  {
+    var repl = f.Replace(item[i-1], ",", "")
+    var repl = f.Replace(repl, "\"", "")
+    str = f.Replace(str, item[i-1], repl)
+  }
+  
+  //** get items one by one and remove ending comma
+  var item = f.RegExStartEnd(str, "", ",")
+  for (var i = 1; i <= item.length; i++)
+  {
+    item[i-1] = f.Replace(item[i-1], ",", "")
+  }
+  
+  return item
+  
+}

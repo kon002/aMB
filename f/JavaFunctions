@@ -1,0 +1,147 @@
+//** logical and-&&, or-||	
+
+function Strip(str, trimStr){
+
+  return TrimStr(str, trimStr)
+  
+}
+
+
+function TrimStr(str, trimStr){
+  //** trims "trimStr" from "str"
+  
+  while (str.substr(0, trimStr.length) == trimStr)
+  {
+    str = str.substr(trimStr.length)
+  }
+  
+  str = f.ReverseStr(str)
+  
+  while (str.substr(0, trimStr.length) == f.ReverseStr(trimStr))
+  {
+    str = str.substr(trimStr.length)
+  }
+
+  str = f.ReverseStr(str)
+  
+  return str
+
+}
+
+
+function TrimAll(str, trimStr){
+
+  for (var i = 0; i < trimStr.length; i++)
+  {
+    var trimWhat = trimStr.substr(i, 1)
+    str = Replace(str, trimWhat, "")
+//    f.log(["trimWhat", trimWhat, str])
+  }
+  
+  return str
+
+}
+
+
+function YahooGetDividend(symbol)
+{
+  
+  var HTML = f2.GetYahooHTML(symbol)
+  
+  return f2.GetYahooItem(HTML, symbol, "Forward Annual Dividend Yield")
+  
+}
+
+
+function Replace(str, find, replaceWith){
+  
+  if (find == "") return str
+  if (find == replaceWith) return str
+  
+  str = str + ""  //** to fix arr[1][0] problem
+  //log(str)
+  while (str.indexOf(find) > -1)
+  {
+    str = str.replace(find, replaceWith)
+    //log(str)
+  }
+  //log(str)
+  return str
+  
+}
+
+
+function Left(s, sep){
+  //** add a separator to the end, just in case
+  s = s + sep
+  return s.substr(0, s.indexOf(sep))
+  
+}
+
+
+function Left2(s, length){
+
+  return s.substr(0, length)
+  
+}
+
+
+function IsNumber(sNum){
+
+  //log("sNum", sNum)
+  if (sNum == undefined)
+  {
+    //log("undefined", sNum)
+    return false
+  }
+  
+  //log("typeof", typeof sNum)
+  if (typeof sNum == "string")
+  {
+    //** remove thousands separator
+    sNum = sNum.replace(",", "")
+  }
+  
+  //log("isNaN(parseFloat(sNum)", isNaN(parseFloat(sNum)))
+  //log("isFinite(sNum)", isFinite(sNum))
+  
+  var check = !isNaN(parseFloat(sNum)) && isFinite(sNum);
+  
+  //log("check", check)
+  
+  return check
+}
+
+function IsNumeric(s){
+
+  return IsNumber(s)
+  
+}
+
+
+function CSVtoArray(str) {
+  
+  //** break CSV into lines
+  var arrLines = RegExStartEnd(str + " ,", "", "\n") 
+
+  //** declare main array
+  var arrData = []
+      
+  for (var k = 1; k < arrLines.length; k++)
+  {
+      //** sub array for individ. rows
+      var arrSub = []
+      var strLine = arrLines[k].replace("\n", ",")
+      //log("strLine: " + strLine)
+      var aItems = RegExStartEnd(strLine, "", ",") 
+      for (var i = 0; i < aItems.length; i++)
+      {
+          arrSub.push(aItems[i].replace(",",""))
+      }
+      //log(arrSub)
+      arrData.push(arrSub)
+  }
+  
+  return arrData
+
+}

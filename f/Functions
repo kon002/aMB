@@ -1,0 +1,833 @@
+//** global vars ================
+gSecondsInOneDay = 24*3600*1000
+//** global vars ================
+
+
+function TestF() {
+
+//  W_WN_Today(ssPrice, rowName, colName, val)
+
+}
+
+
+function W_WN_Today(ss, rowName, colName, val){
+
+  g.W(ss, rowName, colName, val)
+  
+  var notes = g.RN(ss, rowName, colName)
+  notes = val + " - " + d.Today() + CR + notes
+  notes = f.Left2(notes, 500)
+  g.WN(ss, rowName, colName, notes)
+
+}
+
+
+function GetNamedPairValue(str) {
+  //** expects string in the form of:  "symbol":"BTC",
+
+  str = str + " : ,"  //** just in case
+  var item = RegExStartEnd(str, "", "(:|,)")
+  item = TrimAll(item[1], "}],:\"")
+
+  return item
+  
+}
+
+
+function LCase(txt){
+  
+  return txt.toLowerCase()
+
+}
+
+function UpperCase(txt){
+  
+  return txt.toUpperCase()
+
+}
+
+
+function AddWithPercNotes(ssPrice, symbol, label, oldVal, newVal) {
+  //** compare old and new value for a cell, and add to notes if diff > 10%
+  
+  var perc = 0
+  
+  if (f.Abs(f.Perc(oldVal, newVal)) > 10)
+  {
+    var notes = g.RN(ssPrice, symbol, label)
+    perc = f.Perc(oldVal, newVal)
+    var percNote = newVal + " < " + oldVal + Tab + " - " + d.Today() + f.CR
+    notes = f.Left2(percNote + notes, 500)
+    g.WN(ssPrice, symbol, label, notes)
+  }
+  g.W(ssPrice, symbol, label, newVal)
+  
+  return perc
+  
+}
+
+
+function Debug(debug){
+  
+  if (debug == f.cUndefined())
+  {
+    return bDebug
+  }
+  else
+  {
+    bDebug = debug
+  }
+
+}
+
+
+function Key(key1, key2) {
+
+  return f.UCase(key1 + "|" + key2)
+
+}
+
+
+function q(str) {
+
+  return "," + str + ","
+
+}
+
+
+function MinutePassed() {
+  
+  var lastRun = da.R("_Last", "Run")
+  var nextRun = d.FormatDateTimeFull(d.AddSeconds(d.Now(), -75))
+  if (nextRun > lastRun)
+  {
+    da.W("_Last", "Run", d.FormatDateTimeFull(d.Now()))
+    return true
+  }
+  
+}
+
+function GetSymbols(ss) {
+  var arrSymbol = s.GetColIntoArray(ss, "YSymbol")
+  var arr = []
+  
+  for (var i = 0; i < arrSymbol.length; i++)  
+  {
+    var symbol = arrSymbol[i]
+//    if (symbol != "")
+    {
+      if (symbol == "END")
+      {
+        break
+      }
+      arr.push(symbol)
+    }
+  }
+
+  return arr
+  
+}
+  
+
+function SendEmail(subject, body) {
+  
+  MailApp.sendEmail("kgatchev@gmail.com", subject, body)
+    
+}
+
+
+function log(msg) {
+  
+  Logger.log(PrepareMsg(msg))
+  
+}
+
+
+function PrepMsg(msg) {
+  //** no CR
+  
+  PrepareMsg(msg, 1) 
+
+}
+
+function PrepareMsg(msg, noCR) {
+  
+  if (msg == f.cUndefined())
+  {
+    return "*** fn f.PrepareMsg(msg): msg = undefined"
+  }
+  
+  var str = " | "
+  
+  if (typeof msg == "string")
+  {
+    str = msg
+  }
+  else
+  {
+    for (var i = 1; i < msg.length; i++)
+    {
+      str = str + msg[i]  + " | " 
+    }
+    str = msg[0] + " : " + str
+
+  }
+  
+  if (noCR == f.cUndefined())
+  {
+    str = "\n" + str + "\n"
+  }
+  return str
+
+}
+
+
+function ConvertToBilions(strBTM){
+
+  var cap = f.RegExStartEnd(strBTM, "(\\d{1,4}\.)?\\d{1,3}", "")
+  if (f.InStr(strBTM, "T"))
+  {
+    cap[0] = cap[0] * 1000 
+  }
+  else if (f.InStr(strBTM, "B"))
+  {
+    cap[0] = cap[0] 
+  }
+  else if (f.InStr(strBTM, "M"))
+  {
+    cap[0] = cap[0] / 1000
+  }
+  
+  return cap[0]
+
+}
+
+
+function RegExGetNumber(str, optRegExNumTemplate){
+  
+  var debug = false
+  
+  if (str == undefined)
+  {
+    debug = true
+    str = "\"9"
+    optRegExNumTemplate = "\\d+"
+  }
+  
+  if (optRegExNumTemplate == undefined)
+  {
+    optRegExNumTemplate = cRegExPrice
+  }
+  
+  var num = RegExStartEnd(str, optRegExNumTemplate, "")
+  if (debug)
+  {
+    log([num])
+  }
+  
+  return num
+
+}
+
+
+function Defined(obj) {
+  
+  if (typeof obj == "undefined")
+  {
+    return false
+  }
+  
+  return true  
+  
+}
+
+
+function Undefined(obj) {
+  
+  if (typeof obj == "undefined")
+  {
+    return true
+  }
+  
+  return false
+  
+}
+
+
+function CreateTrigger(functionName) {
+
+  //** check to see if it already exists
+  var triggers = ScriptApp.getProjectTriggers();
+  for (var i = 0; i < triggers.length; i++) {
+    if (triggers[i].getHandlerFunction() == functionName)
+    {
+      return
+    }
+  }
+
+  ScriptApp.newTrigger(functionName)
+    .timeBased()
+    .everyMinutes(1)
+    .create()
+
+}
+
+function DeleteTrigger(functionName) {
+  
+  var triggers = ScriptApp.getProjectTriggers();
+  for (var i = 0; i < triggers.length; i++) {
+    if (triggers[i].getHandlerFunction() == functionName)
+    {
+      ScriptApp.deleteTrigger(triggers[i])
+    }
+  }
+
+}
+
+
+function NotEmpty(str){
+  
+  if (Empty(str))
+  {
+    return false
+  }
+  else
+  {
+    return true
+  }
+
+}
+
+
+function Empty(str){
+  
+  if (str == f.cUndefined()) 
+  {
+    return true
+  }
+  else if (str == "")
+  {
+    return true
+  }
+  else
+  {
+    return false
+  }
+
+}
+
+
+function ReverseStr(str){
+  
+  return str.split("").reverse().join("");
+
+}
+
+
+function Mid(str, strLeft, strRight){
+  
+  if (strRight == cUndefined())
+  {
+    strRight = ""
+  }
+  
+  str = str.substr(strLeft.length, str.length - strLeft.length - strRight.length)
+//  log(str)
+  
+  return str
+
+}
+
+
+function Mid2(str, lenLeft, lenRight){
+
+  if (lenRight == cUndefined())
+  {
+    lenRight = 0
+  }
+  
+  str = str.substr(lenLeft, str.length - lenLeft - lenRight)
+//  log(str)
+  
+  return str
+
+}
+
+
+function Mid3(str, InStrTxt, lenLeft, lenRight){
+
+  if (lenRight == cUndefined())
+  {
+    lenRight = 0
+  }
+  
+  var ind = f.InStr(str, InStrTxt)
+  str = str.substr(ind - lenLeft, InStrTxt.length + lenLeft + lenRight)
+//  log(str)
+  
+  return str
+
+}
+
+
+function cUndefined(){
+
+  return undefined
+
+}
+
+
+function FormatN(number, length) {
+  //** formats a number with a leading space
+  
+  var s = number + ""
+  var len = length - s.length
+  
+  for (var i = 1; i <= len; i++) 
+  {
+    s = "  " + s
+  }
+  return s
+  
+}
+
+
+function InStr(str, text) {
+
+  //** 0 will mean the string was not found
+  return str.indexOf(text) + 1
+
+}
+
+
+function RegExpGetNumber(str) {
+
+  var res = RegExStartEnd(str, "(-)?(\\d,)?\\d{1,4}\.\\d{1,2}", "") 
+  
+  return res[0]
+  
+}
+
+
+function RegExpGetPerc(str) {
+
+  var res = RegExStartEnd(str, "(-)?(\\d\.)?\\d{1,4}", "") 
+  
+  return res[0]
+  
+}
+
+
+function RefreshSheet(ss){
+  //** refresh all content in sheets by copy and paste to itself
+  //** espesially good for GoogleFinance
+  
+  var maxCols = ss.getMaxColumns()
+  var maxRows = ss.getMaxRows()
+  
+  ss.getRange(1,1,maxRows,maxCols).copyTo(ss.getRange(1,1))
+  
+}
+
+
+function Abs(param){
+
+  return Math.abs(nuv(param));
+
+}
+
+
+function Rnd(int){
+  if (int == f.cUndefined()) 
+  {
+    return Math.random();
+  }
+  else
+  {
+    var ret = Math.random()
+    ret = f.Int(ret * int)
+    return ret
+  }
+}
+
+
+function nuv(val){
+
+  if (typeof val == "string")
+  {
+    val = val.replace(",", "")   //** remove thousands separator
+  }
+  
+  val = parseFloat(val)
+  if (isNaN(val)) {val = 0}
+  
+  return val
+
+}
+
+
+function AddNotes(sNotes, str){
+
+  if (sNotes != "")
+  {
+    sNotes = sNotes + CR
+  }
+  sNotes = sNotes + str
+  
+  return sNotes 
+
+}
+
+
+function Perc(oldNum, newNum, dec){
+  //log("newNum", newNum)
+  
+  if (nul(newNum) == "") {return}
+  if (nul(newNum) == 0) {return}
+  if (nul(oldNum) == 0) {return}
+  
+  if (dec == undefined) { dec = 2 }
+  
+//  oldNum = Dec(oldNum, dec)
+//  newNum = Dec(newNum, dec)
+  
+  var perc = (newNum - oldNum)/oldNum*100
+  perc = f.Val(Dec(perc, dec))
+  
+  //log("perc", perc)
+  return perc
+  
+}
+
+
+function Dec(num, dec){
+  //log("numPassed", num)
+
+  if (dec == undefined) {dec = 2}
+  
+  if (IsNumber(num) == false)
+  {
+//    num = 0
+    return ""
+  }
+
+  if (typeof num == "string")
+  {
+    //** remove thousands separator
+    num = num.replace(",", "")
+    //log("numNoComma", num)
+  }
+  
+  num = parseFloat(num)
+  //log("numToFloat", num)
+  num = num.toFixed(dec)
+  //log("numToFixed", num)
+  
+  return num
+
+}
+
+
+function Int(x){
+
+  if ((Math.ceil(x) - x) <= 0.5)
+  {  
+    return Math.ceil(x)
+  }
+  else
+  {  
+    return Math.ceil(x) - 1
+  }
+  
+}
+
+
+function CompoundInterestPerYear(CurrPrice, InitialPrice, Years) {
+  
+  if (IsNumber(CurrPrice) && IsNumber(InitialPrice))
+  {
+    return (Math.pow(CurrPrice/InitialPrice, (1/Years))-1)*100
+  }
+  else
+  {
+    return ""
+  }
+
+}
+
+
+function AStr(arr){
+  //converts array a to string
+  return arr.toString()
+}
+
+
+function msg(str) { 
+  log(str)
+  if (gMute == false) { Browser.msgBox(str) }
+}
+
+
+function nul(sStr){
+//  f.log(["nul(sStr)", sStr])
+  
+  if (sStr == undefined) return ""
+  if (sStr == null) return ""
+  if (sStr == "null") return ""
+  //if (isNaN(sStr)) return ""
+
+  return sStr.toString()
+
+}
+
+
+function nul2(sStr){
+  //log("nul-" + sStr)
+  
+  var str = nul(sStr)
+  if (isNaN(str)) return ""
+
+  return str
+
+}
+
+
+function nulTrim(sStr){
+  //log("nul-" + sStr)
+  
+  var str = nul(sStr)
+  str = Trim(str)
+
+  return str
+
+}
+
+
+function Val(s) {
+
+  if (IsNumber(s))
+  {
+    return Number(s)
+  }
+  else
+  {
+    return 0
+  }
+
+}
+
+
+function UCase(str) {
+  //log("str="+typeof str)
+  if (str != undefined && typeof str != "number") { return str.toLocaleUpperCase()}
+  else {return str}
+}
+
+
+function Refresh(ss){
+  //** dummy funtion to refresh backcolor painting
+  
+  GetVal(ss, 1, 1)
+
+}
+
+
+function GetURLText(sURL, iWaitTime){
+  //log("getURLText", sURL)
+  if (sURL.indexOf(" ") > -1) {log("URL contains spaces"); return "URL contains spaces"}
+  
+  if (iWaitTime == f.cUndefined())
+  {
+    iWaitTime = 500
+  }
+
+  //if (IStr(sURL,"yahoo") != -1)
+  {
+    var sNow = new Date().getTime()
+    vDiff = sNow - gLastURLCall
+    
+    if (vDiff < iWaitTime)
+    {
+      f.log(["URLTimeDif", vDiff])
+    }
+    
+    gLastURLCall = sNow
+    if (vDiff < iWaitTime)
+    {
+      Wait(iWaitTime - vDiff) //*** wait 
+    }
+  } 
+
+  sURL = sURL.replace("^", "%5E")
+  
+  //** muteHttpExceptions prevents failing the request
+  var options = {}
+  options.muteHttpExceptions = true
+  //log("fetch: " + sURL)
+  var response = UrlFetchApp.fetch(sURL, options);
+  var fileBlob = response.getBlob();
+  //log("@@@ - " + sURL)
+  //log("@@@ - " + fileBlob.getDataAsString())
+  return fileBlob.getDataAsString()
+  //log("fetch end")
+}
+
+
+
+function logBigMsg(msg){
+
+  logAll(msg)
+  
+}
+
+function logAll(msg){
+  var start = 0
+  var length = 3000
+    
+  while (start < msg.length)
+  {
+     log("start", start)
+     Logger.log("\n" + msg.substring(start, start+length) + "\n")
+     start = start + length
+  }
+
+}
+
+
+function Wait(int) {
+
+//  log("*** Wait " + int + "...")
+  
+  Utilities.sleep(int)  //** wait 
+
+}
+
+
+function CharToNum(letter)
+{ //*columnLetterToNum 
+  var column = 0, length = letter.length;
+  for (var i = 0; i < length; i++)
+  {
+    column += (letter.charCodeAt(i) - 64) * Math.pow(26, length - i - 1);
+  }
+  //log(NumToChar(column))
+  return column;
+}
+function NumToChar(column)
+{ //*columnNumToLetter 
+  var temp, letter = '';
+  while (column > 0)
+  {
+    temp = (column - 1) % 26;
+    letter = String.fromCharCode(temp + 65) + letter;
+    column = (column - temp - 1) / 26;
+  }
+  return letter;
+}
+
+
+function Trim (v){
+  try 
+  {
+    return v.toString().trim();
+  }   
+  catch (error) {return ""}
+}
+
+
+function importData() {
+  
+  var dapp = DriveApp.getFilesByName("MDT.csv")
+  var file = dapp.next()
+  var csv = file.getBlob().getDataAsString();
+  var csvData = Utilities.parseCsv(file.getBlob().getDataAsString())
+  log(csvData[1])
+  
+  return
+  
+  var fSource = DriveApp.getFolderById(reports_folder_id); // reports_folder_id = id of folder where csv reports are saved
+  var fi = fSource.getFilesByName('report.csv'); // latest report file
+  var ss = SpreadsheetApp.openById(data_sheet_id); // data_sheet_id = id of spreadsheet that holds the data to be updated with new report data
+
+  if ( fi.hasNext() ) { // proceed if "report.csv" file exists in the reports folder
+    var file = fi.next();
+    var csv = file.getBlob().getDataAsString();
+    var csvData = CSVToArray(csv); // see below for CSVToArray function
+    var newsheet = ss.insertSheet('NEWDATA'); // create a 'NEWDATA' sheet to store imported data
+    // loop through csv data array and insert (append) as rows into 'NEWDATA' sheet
+    for ( var i=0, lenCsv=csvData.length; i<lenCsv; i++ ) {
+      newsheet.getRange(i+1, 1, 1, csvData[i].length).setValues(new Array(csvData[i]));
+    }
+    /*
+    ** report data is now in 'NEWDATA' sheet in the spreadsheet - process it as needed,
+    ** then delete 'NEWDATA' sheet using ss.deleteSheet(newsheet)
+    */
+    // rename the report.csv file so it is not processed on next scheduled run
+    file.setName("report-"+(new Date().toString())+".csv");
+  }
+
+}
+
+function RegExpGetYahooNumber(str) {
+
+  var res = RegExStartEnd(str, ">(-)?(\\d{1,3})?,?\\d{1,3}\.\\d{1,3}(B|M|T|K)?", "") 
+  res = res[0].replace(">", "")
+  res = f.UCase(res)
+  
+  if (res.indexOf("B") > -1)
+  {
+    res = res.replace("B","")
+    res = res*1000000000
+  }
+  else if (res.indexOf("T") > -1)
+  {
+    res = res.replace("T","")
+    res = res*1000000000000
+  }
+  else if (res.indexOf("M") > -1)
+  {
+    res = res.replace("M","")
+    res = res*1000000
+  }
+  else if (res.indexOf("K") > -1)
+  {
+    res = res.replace("K","")
+    res = res*1000
+  }
+
+  return res
+  
+}
+
+
+function RegExStartEnd(sText, sStart, sEnd){
+  //*** SUMTIMES REG EX PRODUSES AN ERROR IF ARRAY HAS BEEN PASSED
+  var str = sText + ""
+  
+  if (str != undefined)
+  { 
+    if (sEnd == "")
+      {
+        var regExp = new RegExp( sStart , "gi");
+      }
+    else
+      {
+        var regExp = new RegExp( sStart + "(.|\n)+?" + sEnd , "gi"); 
+      }
+  
+    //log("RegExStartEnd:sStart - " + sStart)
+    //log("str - " + str)
+    var sRes = str.match(regExp);
+    if (sRes != undefined) 
+    { 
+      //log("**RegEx SUCCESS**" )
+      return sRes 
+    }  
+  }
+
+  //** something is wrong
+  //log("**RegEx NoResult**" )
+  var a = new Array(); a[0] = "";   
+  return a;
+}
+

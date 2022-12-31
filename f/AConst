@@ -1,0 +1,43 @@
+var gLastURLCall = new Date().getTime() - 5000
+var CR = "\r"
+var Tab = "\t"
+var gMute = false
+var bDebug = false
+
+var cRegExPrice = "(\\d{1},)?\\d{1,3}\.\\d{2}"
+var cRegExINT = "(\\d{1,3},)?\\d{1,3}"
+var cRecExMarketCap = "(\\d{1,3})?,?\\d{1,3}\.\\d{1,3}(B|M|T|K)"
+var cRecExDate = "\\d{4}-\\d{2}-\\d{2}"
+
+//*** color constants - moved to project 
+//var White = "white" 
+//
+//var Drop1 = "#E5F2E4" 
+//var Drop2 = "#F7EAC3" 
+//var Drop3 = "#F7D4D0"
+//
+//var LightGreen = "#E5F2E4" 
+//var LightGreen2 = "#D5EDD3" 
+//var LightGreen3 = "#C5EDD3"
+//
+//var LightPink = "#F5E9F4" 
+//var LightPink2 = "#F2DCF1" 
+//var LightPink3 = "#F0B9ED"
+//
+//var LightBlue = "#A6FFFF"
+//var LightBlue2 = "#A4C2F4"
+//
+//var LightGray = "#f2f2f2"
+//
+//var LightYellow = "#fff2cc"
+//var LightYellow2 = "#FCE3B5"
+//
+//
+//LightRed = "#F5E9F4" 
+//LightRed2 = "#F2DCF1" //light pink F2E1F1, red E67E7E"
+//LightRed3 = "#E5DCF1"
+//
+//var LightRed = "#FC595B"
+//
+//var Red1 = "#FF898A"
+//var Red2 = "#FC595B"
