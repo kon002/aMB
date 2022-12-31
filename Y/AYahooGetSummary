@@ -4,3 +4,12 @@ function AYahooGetSummary(symbol, debug){
   return arr
 
 }
+
+
+function AYSTest(){
+
+  var keys = AYahooGetSummary("AAPL")
+
+  f.log(["div", dict.R("Div")])
+
+}

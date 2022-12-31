@@ -1,9 +1,0 @@
-function AAA_GetPricesYahoo2() {
-  
-  da.Log2(["DeleteTrigger - AAA_GetPricesYahoo2>"])
-  f.DeleteTrigger("AAA_GetPricesYahoo2")  
-  da.Log2(["DeleteTrigger - AAA_GetPricesYahoo2<"])
-
-  API2_Yahoo(2)
-  
-}

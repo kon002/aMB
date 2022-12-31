@@ -1,0 +1,28 @@
+function ParseYahooDividend_Call(){
+
+  var sHTML = GetYahooHTML("AAPL")
+  var res = ParseYahooDividend(sHTML)
+  f.log(["div", res])
+  
+}
+
+function ParseYahooDividend(sHTML)
+{
+  
+  var res =f.RegExStartEnd(sHTML, "\"dividendYield", "}")
+  f.log("res1", res[0])
+  var res =f.RegExStartEnd(res[0], "\\d{1}\.\\d{1,4}", "")
+  f.log("res2", res[0])
+  if (res[0] == "")
+  {
+    var res =f.RegExStartEnd(sHTML, "\"yield", "}")
+    f.log("res3", res[0])
+    var res =f.RegExStartEnd(res[0], "\\d{1}\.\\d{1,4}", "")
+    f.log("res4", res[0])
+  }
+  res = f.Dec(res[0]*100, 2)
+  
+  return res
+  
+}
+

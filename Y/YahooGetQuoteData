@@ -126,7 +126,7 @@ function YahooGetProfileData(symbol){
 
 function GetYahooHTML(symbol, tab) {
   
-  var link = "https://finance.yahoo.com/quote/" + symbol
+  var link = "https://ca.finance.yahoo.com/quote/" + symbol
   
   if (tab != f.cUndefined())
   {
@@ -140,26 +140,6 @@ function GetYahooHTML(symbol, tab) {
   return text
 }
 
-
-function ParseYahooDividend(sHTML)
-{
-  
-  var res =f.RegExStartEnd(sHTML, "\"dividendYield", "}")
-  //log("res1", res[0])
-  var res =f.RegExStartEnd(res[0], "\\d{1}\.\\d{1,4}", "")
-  //log("res2", res[0])
-  if (res[0] == "")
-  {
-    var res =f.RegExStartEnd(sHTML, "\"yield", "}")
-    //log("res3", res[0])
-    var res =f.RegExStartEnd(res[0], "\\d{1}\.\\d{1,4}", "")
-    //log("res4", res[0])
-  }
-  res = f.Dec(res[0]*100, 2)
-  
-  return res
-  
-}
 
 
 function ParseYahooName(sHTML)
