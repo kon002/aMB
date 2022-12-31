@@ -1,0 +1,99 @@
+function API2_Yahoo(param){
+  //** Yahoo - more universal
+  da.Log2(["Prices:API2_Yahoo>"])
+  
+  var sasMB = SpreadsheetApp.openById("1lF1MGfopkFzLchPVGiCTIxsIdIqGKuYJ3Li-suLhZ_A");
+  var ssMB = sasMB.getSheetByName("MB")  //** 
+  var ssPrice = sasMB.getSheetByName("Price")  //** 
+  
+  if (f.Undefined(param))
+  {
+    param = 3  //** manual
+  }
+  
+  var arrMB = g.AddSheetWN(ssMB)
+  if (param == 1)
+  {
+    arrMB = arrMB.slice(4,125)
+  }
+  else if (param == 2)
+  {
+    arrMB = arrMB.slice(125,250)
+  }
+//  f.log([arrMB])
+//  return
+
+  if (param == 1 || param == 2)
+  {
+    var arrSymbols = arrMB
+    var start = 0  // 550
+    var end = arrSymbols.length   //**  
+  }
+  else
+  {
+    var arrSymbols = g.AddSheet(ssA)
+    var start = 3  //** 2  // 550
+    var end = start+3  //start + 100 //** arrSymbols.length   //**  
+  }
+
+  for (var i = start; i < end; i++)  //** arrSymbols.length
+  {
+    var symbol = arrSymbols[i]
+    if (symbol != "")
+    {
+//      f.log(["symbol", symbol])
+//      if (symbol == "ENPH")
+//      if (f.InStr(arrMB, symbol))  //** only MB symbols
+      {
+        f.log(["keys", symbol])
+        
+        var keys = y.AYahooGetSummary(symbol) 
+        f.log(["keys", symbol, keys, dict.R("price")])
+        if (dict.R("price") > 0)
+        {
+          g.W(ssA, symbol, "Price", dict.R("price"))
+          g.W(ssA, symbol, "Perc", dict.R("perc"))
+          g.W(ssA, symbol, "Hi52", dict.R("hi52"))
+          g.W(ssA, symbol, "Cap", dict.R("Cap"))
+          g.W(ssA, symbol, "Div", dict.R("Div"))
+          g.W(ssA, symbol, "TS", d.TimeStamp())
+//          break
+          g.W(ssMB, symbol, "Price", dict.R("price"))
+          g.W(ssMB, symbol, "1d", dict.R("perc"))
+          g.W(ssMB, symbol, "Hi52", dict.R("hi52"))
+          g.W(ssMB, symbol, "Div", dict.R("Div"))
+          g.WN(ssMB, symbol, "Price", d.TimeStamp())
+          g.WN(ssMB, symbol, "Hi52", d.TimeStamp())
+          g.WN(ssMB, symbol, "1d", d.TimeStamp())
+          g.WN(ssMB, symbol, "Div", d.TimeStamp())
+
+          g.W(ssPrice, symbol, "Price", dict.R("price"))
+          g.W(ssPrice, symbol, "Hi52", dict.R("hi52"))
+          g.W(ssPrice, symbol, "1d", dict.R("perc"))
+          g.W(ssPrice, symbol, "Div", dict.R("Div"))
+          g.WN(ssPrice, symbol, "Price", d.TimeStamp())
+          g.WN(ssPrice, symbol, "Hi52", d.TimeStamp())
+          g.WN(ssPrice, symbol, "1d", d.TimeStamp())
+          g.WN(ssPrice, symbol, "Div", d.TimeStamp())
+        }
+      }
+    }
+  }
+  
+  g.ASave(ssA)
+  g.W(ssMB, "AAA", "Price", d.TimeStamp())
+  g.ASave(ssMB)
+  g.ASave(ssPrice)
+  
+  da.Log2(["Prices:API2_Yahoo<"])
+
+  if (param == 1)
+  {
+//    da.Log2(["CreateTrigger AAA_GetPricesYahoo2>"])
+//    f.CreateTrigger("AAA_GetPricesYahoo2")  
+//    da.Log2(["CreateTrigger AAA_GetPricesYahoo2<"])
+  }
+  
+}
+
+

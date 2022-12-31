@@ -1,0 +1,14 @@
+var sas = SpreadsheetApp.openById("1n-tss5EPPwhBqazuzHoPQ3IQDVF-nrUpWvcZTil5u8Y");
+//var sas = SpreadsheetApp.getActiveSpreadsheet();
+var ssA = sas.getSheetByName("A")
+var ssB = sas.getSheetByName("B")
+var ssC = sas.getSheetByName("C")
+var ssD = sas.getSheetByName("D")
+var ssP = sas.getSheetByName("P")
+var ssYP = sas.getSheetByName("YP")
+var ssZ = sas.getSheetByName("Z")
+var ssKey = sas.getSheetByName("Key")
+var ssYH = sas.getSheetByName("YH")
+
+//var arrSymbols = g.AddSheet(ssA)
+

@@ -1,0 +1,62 @@
+function AAA_GetPricesYahoo3() {
+  //** update less used symbols
+  da.Log2(["AAA_GetPricesYahoo3>"])
+  
+  var sasMB = SpreadsheetApp.openById("1lF1MGfopkFzLchPVGiCTIxsIdIqGKuYJ3Li-suLhZ_A");
+  var ssMB = sasMB.getSheetByName("MB")  //** 
+  var ssPrice = sasMB.getSheetByName("Price")  //** 
+
+  var arrSymbols = g.AddSheet(ssA)
+  var loops = 0
+  
+  for (var i = 2; i < arrSymbols.length; i++)  //** arrSymbols.length
+  {
+    var symbol = arrSymbols[i]
+    if (symbol != "")
+    {
+      var ts = g.R(ssA, symbol, "TS")
+      ts = f.Left2(ts, 10)
+      ts = d.SetDate(ts)
+      var today = d.SetDate(d.Today())
+      if (d.DateDiff(today, ts) > 4)
+      {
+        var keys = y.AYahooGetSummary(symbol) 
+//        f.log(["keys", symbol, keys, dict.R("price")])
+        if (dict.R("price") > 0)
+        {
+          g.W(ssA, symbol, "Price", dict.R("price"))
+          g.W(ssA, symbol, "Perc", dict.R("perc"))
+          g.W(ssA, symbol, "Hi52", dict.R("hi52"))
+          g.W(ssA, symbol, "Cap", dict.R("Cap"))
+          g.W(ssA, symbol, "TS", d.TimeStamp())
+
+          g.W(ssMB, symbol, "Price", dict.R("price"))
+          g.W(ssMB, symbol, "1d", dict.R("perc"))
+          g.W(ssMB, symbol, "Hi52", dict.R("hi52"))
+          g.WN(ssMB, symbol, "Price", d.TimeStamp())
+          g.WN(ssMB, symbol, "1d", d.TimeStamp())
+
+          g.W(ssPrice, symbol, "Price", dict.R("price"))
+          g.W(ssPrice, symbol, "1d", dict.R("perc"))
+          g.WN(ssPrice, symbol, "Price", d.TimeStamp())
+          g.WN(ssPrice, symbol, "1d", d.TimeStamp())
+        }
+        f.log([symbol, dict.R("price")])
+        loops++
+        if (loops > 50)
+        {
+          break
+        }
+      }
+    }
+  }
+  
+  g.ASave(ssA)
+  g.ASave(ssMB)
+  g.ASave(ssPrice)
+  
+  da.Log2(["AAA_GetPricesYahoo3<", loops])
+
+}
+
+

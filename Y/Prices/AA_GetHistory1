@@ -1,0 +1,16 @@
+function GetHistory1(symbol) {
+  
+  if (symbol == f.cUndefined())
+  {
+    symbol = "BTCC-B.TO"
+    f.Debug(true)
+  }
+  
+  GetHistory01(symbol)
+  GetHistory02(symbol)
+  
+  if (f.Debug())  //** debug
+  {
+    g.ASave(ssB)
+  }
+}

@@ -1,0 +1,26 @@
+function AA_GetPrices() {
+  
+//  API_GetPrices()   //** FinMod stopped working for batch prices
+
+  var sasMB = SpreadsheetApp.openById("1lF1MGfopkFzLchPVGiCTIxsIdIqGKuYJ3Li-suLhZ_A");
+  var ssPrice = sasMB.getSheetByName("Price")  //** 
+  
+  var arrSymbols = g.AddSheetWN(ssPrice)
+  
+  for (var i = 1; i < arrSymbols.length; i++)  //arrSymbols.length
+  {
+    var symbol = arrSymbols[i]  
+    if (symbol != "")
+    {
+      var price = g.R(ssPrice, symbol, "Price")
+      var priceNote = g.RN(ssPrice, symbol, "Price")
+//      f.log([symbol, price, priceNote])
+      g.W(ssA, symbol, "Price", price)
+      g.W(ssA, symbol, "TS", priceNote)
+    }
+  }
+
+  g.ASave(ssA)
+  
+}
+

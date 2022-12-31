@@ -1,0 +1,53 @@
+function GetHistory() {
+//  f.CreateTrigger("GetHistory")
+//  g.W(ssB, "AAADates", "TS2", 761)
+//  return
+
+  t.Run("GetHistoryA")
+//  return
+  
+  var arrSymbols = g.AddSheet(ssB)
+  
+//  var arr3yDates = g.R(ssB, "AAADates", "3y")
+//  var arr15yDates = g.R(ssB, "AAADates", "15y")
+//  arr3yDates = arr3yDates.split(",")
+//  arr15yDates = arr15yDates.split(",")
+  
+  var start = 421
+  var end   = start+1    
+  var loop = 0
+  
+  for (var i = start - 1; i < end; i++)  //** arrSymbols.length
+//  for (var i = 2; i < arrSymbols.length; i++)  
+  {
+    var symbol = arrSymbols[i]
+    var own = g.R(ssB, symbol, "Own")
+//    if (own != "")
+//    if (symbol == "MVIS")
+    if (symbol != "")
+    {
+      f.log(["GetHistory>", symbol])
+//      return
+      g.W(ssB, "AAADates", "TS2", i+2)
+//      if (i+2 > 761)
+//      {
+//        f.DeleteTrigger("GetHistory")
+//        break
+//      }
+//      return
+
+      GetHistory1(symbol)
+      f.Wait(100)
+      loop++
+      if (loop > 30)
+      {
+        break
+      }
+    }
+  }
+  
+  g.ASave(ssB)
+
+  t.ShowTimeInterval("GetHistoryA")
+  
+}

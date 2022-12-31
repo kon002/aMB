@@ -1,0 +1,45 @@
+function AAA_GetYahooHistory() {
+  
+  var symbol = "LUNA1-USD"
+//  f.log(["symbol", symbol])
+//  return
+  
+  //** add symbol if not exist
+  var exist = g.R(ssB, symbol, "Symbol")
+  if (exist == "")
+  {
+    g.W(ssB, symbol, "Symbol", symbol)
+  }
+  var exist = g.R(ssA, symbol, "Symbol")
+  if (exist == "")
+  {
+    g.W(ssA, symbol, "Symbol", symbol)
+    g.ASave(ssA)
+  }
+  
+  var s3y = ""
+  var s15y = ""
+  
+  for (var i = 2; i < s.MaxRows(ssYH); i++)
+  {
+    var price = g.R(ssYH, i, "Adj Close**")
+    if (price != "" && price != "-")
+    {
+      if (i < 70)
+      {
+        s3y = s3y + price + ","
+      }
+      if (i % 5 == 0 && i < 750)
+      {
+        s15y = s15y + price + ","
+      }
+      g.W(ssB, symbol, "3y", s3y)
+      g.W(ssB, symbol, "15y", s15y)
+      g.W(ssB, symbol, "TS", d.TimeStamp())
+      g.W(ssB, symbol, "TS2", d.TimeStamp())
+    }
+  }
+  g.ASave(ssB)
+//  f.log(["price", price, i, s3y, s15y])
+  
+}

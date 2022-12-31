@@ -1,0 +1,50 @@
+function Trigger01AM(){
+  
+    da.Log2(["Prices:Trigger01AM>"])
+
+    //** update less used symbols
+    AAA_GetPricesYahoo3()
+    
+    da.Log2(["Prices:Trigger01AM<"])
+
+}
+
+function Trigger07AM(){
+  
+  if (d.Weekend() == false)
+  {
+    da.Log2(["Prices:Trigger07AM>"])
+
+    API2_Yahoo(1)
+    
+    da.Log2(["Prices:Trigger07AM<"])
+  }
+
+}
+
+function Trigger01PM(){
+  
+  if (d.Weekend() == false)
+  {
+    da.Log2(["Prices:Trigger01PM>"])
+
+    API2_Yahoo(1)
+    
+    da.Log2(["Prices:Trigger01PM<"])
+  }
+
+}
+
+function Trigger02PM(){
+  
+  if (d.Weekend() == false)
+  {
+    da.Log2(["Prices:Trigger02PM>"])
+
+    API2_Yahoo(2)
+    
+    da.Log2(["Prices:Trigger02PM<"])
+  }
+
+}
+

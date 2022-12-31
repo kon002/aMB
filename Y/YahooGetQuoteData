@@ -1,11 +1,3 @@
-function AYahooGetSummary(symbol, debug){
-
-  var arr = YahooGetQuoteData(symbol, true, debug)
-  return arr
-
-}
-
-
 function YahooGetQuoteData(symbol, returnKeys, debug){
 
   var HTML = GetYahooHTML(symbol)

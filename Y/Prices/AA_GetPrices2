@@ -1,0 +1,5 @@
+function AA_GetPrices2() {
+  
+  API2_Yahoo()
+  
+}

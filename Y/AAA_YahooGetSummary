@@ -1,0 +1,6 @@
+function AYahooGetSummary(symbol, debug){
+
+  var arr = YahooGetQuoteData(symbol, true, debug)
+  return arr
+
+}
