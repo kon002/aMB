@@ -61,6 +61,7 @@ function API2_Yahoo(param){
           g.W(ssMB, symbol, "Price", dict.R("price"))
           g.W(ssMB, symbol, "1d", dict.R("perc"))
           g.W(ssMB, symbol, "Hi52", dict.R("hi52"))
+          g.W(ssMB, symbol, "Low52", dict.R("low52"))
           g.W(ssMB, symbol, "Div", dict.R("Div"))
           g.WN(ssMB, symbol, "Price", d.TimeStamp())
           g.WN(ssMB, symbol, "Hi52", d.TimeStamp())

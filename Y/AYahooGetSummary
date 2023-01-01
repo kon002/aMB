@@ -1,15 +1,15 @@
-function AYahooGetSummary(symbol, debug){
+function AYahooGetSummary_Call(){
 
-  var arr = YahooGetQuoteData(symbol, true, debug)
-  return arr
+  var keys = AYahooGetSummary("AAPL")
+
+  f.log(["low52", dict.R("low52")])
 
 }
 
 
-function AYSTest(){
+function AYahooGetSummary(symbol, debug){
 
-  var keys = AYahooGetSummary("AAPL")
-
-  f.log(["div", dict.R("Div")])
+  var arr = YahooGetQuoteData(symbol, true, debug)
+  return arr
 
 }
