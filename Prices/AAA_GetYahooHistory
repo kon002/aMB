@@ -1,7 +1,12 @@
-function AAA_GetYahooHistory() {
+function AAA_GetYahooHistory(symbol) {
   
-  var symbol = "LUNA1-USD"
-//  f.log(["symbol", symbol])
+  //Assumes yahoo prices are copied to ssYH
+  //easier to use MB.AA_RefreshHistory()
+  
+  if (f.Undefined(symbol))
+    { symbol = "SHOP" }
+  
+ f.log(["symbol", symbol])
 //  return
   
   //** add symbol if not exist

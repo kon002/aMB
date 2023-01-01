@@ -1,0 +1,6 @@
+function AAA_GetYahooHistory_Call() {
+  
+  AAA_GetYahooHistory("TREX")
+  //Call GetPerformanceLong() in MB
+
+}

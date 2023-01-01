@@ -1,0 +1,9 @@
+function AA_RefreshHistory() {
+  //Gets 15y history from API call, refreshes MB.Price, MB
+  
+  var symbol = "FTNT"
+  p.GetHistory01(symbol, true)
+  GetPerformanceLong(symbol, true)
+  Match1y()
+
+}
